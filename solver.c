@@ -37,33 +37,32 @@ bool validity_check(int board[ROW][COLUMN], int row, int column, int num)
 }
 
 int sudokuHelper(int puzzle[][9], int row, int column) {
-    //for num one through 9
-    for(int i = 1; i < 10; i++)
-    {
-        if(validity_check(puzzle, row, column, i))
-        {
-            puzzle[row][column] = i;
-            int nextRow, nextCol;
-            if(column == 8)
-            {
-                nextCol = 0;
-                nextRow = row + 1;
-            }
-            else
-            {
-                nextRow = row;
-                nextCol = column + 1;
-            }
-            if(nextRow == 9)
-            {
-                return 1; //base case reached
-            }
-            if(sudokuHelper(puzzle, nextRow, nextCol))
+            if ( row == 9)
             {
                 return 1;
             }
-            puzzle[row][column] = 0;
-        }
-    }
-    return 0;
+            else if(column == 9)
+            {
+                sudokuHelper(puzzle, row + 1, 0);
+            }
+            else if(puzzle[row][column] != 0)
+            {
+                sudokuHelper(puzzle, row, column+1);
+            }
+            else
+            {
+                for(int i = 0; i < 10; i++)
+                {
+                    if(validity_check(puzzle,row,column,i))
+                    {
+                        puzzle[row][column] = i;
+                        if(sudokuHelper(puzzle,row,column+1))
+                        {
+                            return 1;
+                        }
+                        puzzle[row][column] = 0;
+                    }
+                }
+                return false;
+            }
 }

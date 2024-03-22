@@ -8,7 +8,6 @@
 #define POSSVAL 9
 #define EMPTY_CELL 0
 
-extern int board[ROW][COLUMN]; // Declaration of the board array
 
 int display(int board[][COLUMN]); // Function declaration
 bool validity_check(int board[ROW][COLUMN], int row, int column, int num);
