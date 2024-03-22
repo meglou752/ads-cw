@@ -5,4 +5,5 @@ set(CMAKE_C_STANDARD 99)
 
 add_executable(ADS main.c
         interface.c
-        sudoku.h)
+        sudoku.h
+        solver.c)

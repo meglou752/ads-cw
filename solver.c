@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "sudoku.h"
-int main()
+
+int validity_check(int board[9][9], int x, int y)
 {
-    display(board);
     return 0;
 }
