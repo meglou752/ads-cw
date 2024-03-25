@@ -4,7 +4,7 @@
 #include "sudoku.h"
 
 //can use the same validity checker for solution and player guess
-bool validity_check(int board[ROW][COLUMN], int row, int column, int num)
+int validity_check(int board[ROW][COLUMN], int row, int column, int num)
 {
     int startRow = row - row%3;
     int startCol = column - column%3;
@@ -13,14 +13,14 @@ bool validity_check(int board[ROW][COLUMN], int row, int column, int num)
     {
         if(board[row][i] == num)
         {
-            return false;
+            return 0;
         }
     }
     for(int i = 0; i < COLUMN; i++)
     {
         if(board[i][column] == num)
         {
-            return false;
+            return 0;
         }
     }
     for(int i = 0; i < 3; i++)
@@ -29,25 +29,25 @@ bool validity_check(int board[ROW][COLUMN], int row, int column, int num)
         {
             if(board[i + startRow][j + startCol] == num)
             {
-                return false;
+                return 0;
             }
         }
     }
-    return true;
+    return 1;
 }
 
-int sudokuHelper(int puzzle[][9], int row, int column) {
-            if ( row == 9)
+int sudoku_helper(int puzzle[][9], int row, int column) {
+            if (row == 9)
             {
                 return 1;
             }
             else if(column == 9)
             {
-                sudokuHelper(puzzle, row + 1, 0);
+                return sudokuHelper(puzzle, row + 1, 0);
             }
             else if(puzzle[row][column] != 0)
             {
-                sudokuHelper(puzzle, row, column+1);
+                return sudokuHelper(puzzle, row, column+1);
             }
             else
             {
@@ -63,6 +63,6 @@ int sudokuHelper(int puzzle[][9], int row, int column) {
                         puzzle[row][column] = 0;
                     }
                 }
-                return false;
+                return 0;
             }
 }

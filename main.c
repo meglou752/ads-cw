@@ -1,9 +1,17 @@
 #include <stdio.h>
 #include "sudoku.h"
+int board[ROW][COLUMN] = {{0,0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0,0},
+                          {0,1,0,0,0,0,6,0,0},
+                          {0,0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0,0},
+                          {0,0,0,0,5,0,0,0,0},
+                          {0,0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,4,0},};
 int main()
 {
-    int board[ROW][COLUMN] = {0};
-    sudokuHelper(board, 0, 0);
+    sudoku_helper(board, 0, 0);
     display(board);
     return 0;
 }
