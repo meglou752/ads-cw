@@ -4,7 +4,7 @@
 #include <time.h>
 #include "sudoku.h"
 
-int board[ROW][COLUMN] = {{0,0,0,0,0,0,0,0,0},
+int board[ROW][COLUMN][PENCILMARKS] = {{0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
@@ -14,7 +14,7 @@ int board[ROW][COLUMN] = {{0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},};
 //can use the same validity checker for solution and player guess
-int validity_check(int board[ROW][COLUMN], int row, int column, int num)
+int validity_check(int board[ROW][COLUMN][PENCILMARKS], int row, int column, int num)
 {
     int startRow = row - row%3;
     int startCol = column - column%3;
