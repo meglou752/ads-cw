@@ -72,6 +72,7 @@ void seed_random_units() {
     for (int i = 0; i < ROW; i += 3) {
         for (int j = 0; j < COLUMN; j += 3) {
             if (i == j) { // Seed along the main diagonal
+                k=0;
                 for (int u = 0; u < 3; u++) {
                     for (int v = 0; v < 3; v++) {
                         board[i + u][j + v] = unit[k++];
