@@ -43,11 +43,11 @@ int sudoku_helper(int puzzle[][9], int row, int column) {
             }
             else if(column == 9)
             {
-                return sudokuHelper(puzzle, row + 1, 0);
+                return sudoku_helper(puzzle, row + 1, 0);
             }
             else if(puzzle[row][column] != 0)
             {
-                return sudokuHelper(puzzle, row, column+1);
+                return sudoku_helper(puzzle, row, column+1);
             }
             else
             {
@@ -56,7 +56,7 @@ int sudoku_helper(int puzzle[][9], int row, int column) {
                     if(validity_check(puzzle,row,column,i))
                     {
                         puzzle[row][column] = i;
-                        if(sudokuHelper(puzzle,row,column+1))
+                        if(sudoku_helper(puzzle,row,column+1))
                         {
                             return 1;
                         }
