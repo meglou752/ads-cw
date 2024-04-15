@@ -13,12 +13,14 @@ int board[ROW][COLUMN] = {{0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},};
-//can use the same validity checker for solution and player guess
+
+//use the same validity checker for solution, player guess, 'hint', 'bot' etc
 int validity_check(int board[ROW][COLUMN], int row, int column, int num)
 {
     int startRow = row - row%3;
     int startCol = column - column%3;
 
+    //check row
     for(int i = 0; i < ROW; i++)
     {
         if(board[row][i] == num)
@@ -26,6 +28,8 @@ int validity_check(int board[ROW][COLUMN], int row, int column, int num)
             return 0;
         }
     }
+
+    //check column
     for(int i = 0; i < COLUMN; i++)
     {
         if(board[i][column] == num)
@@ -33,6 +37,8 @@ int validity_check(int board[ROW][COLUMN], int row, int column, int num)
             return 0;
         }
     }
+
+    //check unit
     for(int i = 0; i < 3; i++)
     {
         for(int j=0; j<3; j++)
@@ -43,6 +49,7 @@ int validity_check(int board[ROW][COLUMN], int row, int column, int num)
             }
         }
     }
+    //else return unsuccessful
     return 1;
 }
 
@@ -51,6 +58,7 @@ int shuffle(int unit[])
     int tmp;
     for(int i = 0; i < 9; i++)
     {
+            //shuffle random index content with current index
             int random = (rand() % 9);
             tmp = unit[i];
             unit[i] = unit[random];
@@ -60,22 +68,19 @@ int shuffle(int unit[])
 }
 
 void seed_random_units() {
-    // Initialize array containing numbers 1 to 9
     int unit[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-    // Shuffle the array
     srand(time(NULL));
     shuffle(unit);
 
-    // Seed each 3x3 unit along the main diagonal of the puzzle with shuffled numbers
-    int k = 0; // Index for the shuffled array
+    int unit_index = 0; //index for the shuffled array
     for (int i = 0; i < ROW; i += 3) {
         for (int j = 0; j < COLUMN; j += 3) {
-            if (i == j) { // Seed along the main diagonal
-                k=0;
+            if (i == j) { //seed along the main diagonal only
+                unit_index=0;
                 for (int u = 0; u < 3; u++) {
                     for (int v = 0; v < 3; v++) {
-                        board[i + u][j + v] = unit[k++];
+                        board[i + u][j + v] = unit[unit_index++];
                     }
                 }
             }
