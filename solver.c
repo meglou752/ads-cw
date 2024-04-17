@@ -4,6 +4,11 @@
 #include <time.h>
 #include "sudoku.h"
 
+// Define the Sudoku board dimensions
+#define ROW 9
+#define COLUMN 9
+
+// Global Sudoku board
 int board[ROW][COLUMN] = {{0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
@@ -12,53 +17,52 @@ int board[ROW][COLUMN] = {{0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
                           {0,0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0,0},};
-//can use the same validity checker for solution and player guess
+                          {0,0,0,0,0,0,0,0,0}};
+
+// Function to check the validity of placing a number at a certain position on the board
 int validity_check(int board[ROW][COLUMN], int row, int column, int num)
 {
-    int startRow = row - row%3;
-    int startCol = column - column%3;
+    int startRow = row - row % 3;
+    int startCol = column - column % 3;
 
+    // Check row and column
     for(int i = 0; i < ROW; i++)
     {
-        if(board[row][i] == num)
+        if(board[row][i] == num || board[i][column] == num)
         {
-            return 0;
+            return 0; // Invalid placement
         }
     }
-    for(int i = 0; i < COLUMN; i++)
-    {
-        if(board[i][column] == num)
-        {
-            return 0;
-        }
-    }
+
+    // Check 3x3 subgrid
     for(int i = 0; i < 3; i++)
     {
-        for(int j=0; j<3; j++)
+        for(int j = 0; j < 3; j++)
         {
             if(board[i + startRow][j + startCol] == num)
             {
-                return 0;
+                return 0; // Invalid placement
             }
         }
     }
-    return 1;
+    return 1; // Valid placement
 }
 
+// Function to shuffle an array of integers
 int shuffle(int unit[])
 {
     int tmp;
     for(int i = 0; i < 9; i++)
     {
-            int random = (rand() % 9);
-            tmp = unit[i];
-            unit[i] = unit[random];
-            unit[random] = tmp;
+        int random = rand() % 9;
+        tmp = unit[i];
+        unit[i] = unit[random];
+        unit[random] = tmp;
     }
     return 0;
 }
 
+// Function to seed random numbers in each 3x3 unit along the main diagonal of the puzzle
 void seed_random_units() {
     // Initialize array containing numbers 1 to 9
     int unit[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -72,7 +76,7 @@ void seed_random_units() {
     for (int i = 0; i < ROW; i += 3) {
         for (int j = 0; j < COLUMN; j += 3) {
             if (i == j) { // Seed along the main diagonal
-                k=0;
+                k = 0;
                 for (int u = 0; u < 3; u++) {
                     for (int v = 0; v < 3; v++) {
                         board[i + u][j + v] = unit[k++];
@@ -83,42 +87,43 @@ void seed_random_units() {
     }
 }
 
-
+// Function to solve the Sudoku puzzle using backtracking algorithm
 int backtracking(int row, int column) {
-            if (row == 9)
+    if (row == 9)
+    {
+        return 1; // Puzzle solved
+    }
+    else if(column == 9)
+    {
+        return backtracking(row + 1, 0);
+    }
+    else if(board[row][column] != 0)
+    {
+        return backtracking(row, column + 1);
+    }
+    else
+    {
+        for(int i = 1; i <= 9; i++) // Try placing numbers 1 to 9
+        {
+            if(validity_check(board, row, column, i))
             {
-                return 1;
-            }
-            else if(column == 9)
-            {
-                return backtracking(row + 1, 0);
-            }
-            else if(board[row][column] != 0)
-            {
-                return backtracking(row, column+1);
-            }
-            else
-            {
-                for(int i = 0; i < 10; i++)
+                board[row][column] = i;
+                if(backtracking(row, column + 1))
                 {
-                    if(validity_check(board,row,column,i))
-                    {
-                        board[row][column] = i;
-                        if(backtracking(row,column+1))
-                        {
-                            return 1;
-                        }
-                        board[row][column] = 0;
-                    }
+                    return 1; // Puzzle solved
                 }
-                return 0;
+                board[row][column] = 0; // Backtrack
             }
+        }
+        return 0; // No valid number found for this cell
+    }
 }
 
+// Function to display the Sudoku board
 void display_board() {
     for (int i = 0; i < ROW; i++) {
         for (int j = 0; j < COLUMN; j++) {
-            printf("%d \0", board[i][j]);
+            printf("%d ", board[i][j]);
         }
         printf("\n");
     }
