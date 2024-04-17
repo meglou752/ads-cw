@@ -23,5 +23,6 @@ int main()
     printf("Average CPU time used for basic algorithm (2d array, int data types): %f seconds\n", cpu_time_used);
     printf("\n");
 
+    display_board();
     return 0;
 }

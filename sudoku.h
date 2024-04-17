@@ -11,7 +11,7 @@
 #define EMPTY_CELL 0
 int display(int board[][COLUMN]); // Function declaration
 int validity_check(int board[ROW][COLUMN][PENCILMARKS], int row, int column, int num);
-int shuffle(int unit[]);
+void shuffle(int unit[]);
 void seed_random_units();
 int backtracking(int row, int column);
 void display_board();

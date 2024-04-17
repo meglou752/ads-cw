@@ -43,10 +43,17 @@ int validity_check(int board[ROW][COLUMN][PENCILMARKS], int row, int column, int
             }
         }
     }
+    for(int i = 0; i < 9; i++)
+    {
+        if(board[row][column][i] == 0)
+        {
+            return 0;
+        }
+    }
     return 1;
 }
 
-int shuffle(int unit[])
+void shuffle(int unit[])
 {
     int tmp;
     for(int i = 0; i < 9; i++)
@@ -56,7 +63,6 @@ int shuffle(int unit[])
             unit[i] = unit[random];
             unit[random] = tmp;
     }
-    return 0;
 }
 
 void seed_random_units() {
@@ -75,7 +81,7 @@ void seed_random_units() {
                 k=0;
                 for (int u = 0; u < 3; u++) {
                     for (int v = 0; v < 3; v++) {
-                        board[i + u][j + v] = unit[k++];
+                        board[i + u][j + v][0] = unit[k++];
                     }
                 }
             }
@@ -103,12 +109,12 @@ int backtracking(int row, int column) {
                 {
                     if(validity_check(board,row,column,i))
                     {
-                        board[row][column] = i;
+                        board[row][column][0] = i;
                         if(backtracking(row,column+1))
                         {
                             return 1;
                         }
-                        board[row][column] = 0;
+                        board[row][column][0] = 0;
                     }
                 }
                 return 0;
