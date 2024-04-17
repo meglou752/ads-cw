@@ -6,6 +6,8 @@
 #define COLUMN 9
 #define ROW 9
 #define PENCILMARKS 9
+#define UNIT_ROW 3
+#define UNIT_COL 9
 
 #define POSSVAL 9
 #define EMPTY_CELL 0

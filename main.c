@@ -8,6 +8,7 @@ int main()
     srand(time(NULL));
     clock_t start_time, end_time;
     double cpu_time_used;
+    /*
     start_time = clock();
 
     for(int i = 0; i < 1000; i++)
@@ -22,7 +23,9 @@ int main()
 
     printf("Average CPU time used for basic algorithm (2d array, int data types): %f seconds\n", cpu_time_used);
     printf("\n");
-
+     */
+    seed_random_units();
+    backtracking(0, 0);
     display_board();
     return 0;
 }
