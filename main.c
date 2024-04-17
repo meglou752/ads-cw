@@ -27,5 +27,7 @@ int main()
     seed_random_units();
     backtracking(0, 0);
     display_board();
+    printf("\n");
+    display_pencilmarks();
     return 0;
 }

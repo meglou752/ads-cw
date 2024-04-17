@@ -9,42 +9,36 @@ int board[ROW][COLUMN][PENCILMARKS];
 //can use the same validity checker for solution and player guess
 int validity_check(int board[ROW][COLUMN][PENCILMARKS], int row, int column, int num)
 {
-    int startRow = row - row%3;
-    int startCol = column - column%3;
+    int startRow = row - row % 3;
+    int startCol = column - column % 3;
 
-    for(int i = 0; i < ROW; i++)
+    for (int i = 0; i < ROW; i++)
     {
-        if(board[row][i] == num)
+        if (board[row][i][num] == 1)
         {
             return 0;
         }
     }
-    for(int i = 0; i < COLUMN; i++)
+    for (int i = 0; i < COLUMN; i++)
     {
-        if(board[i][column] == num)
+        if (board[i][column][num] == 1)
         {
             return 0;
         }
     }
-    for(int i = 0; i < UNIT_ROW; i++)
+    for (int i = 0; i < UNIT_ROW; i++)
     {
-        for(int j=0; j< UNIT_COL; j++)
+        for (int j = 0; j < UNIT_COL; j++)
         {
-            if(board[i + startRow][j + startCol] == num)
+            if (board[i + startRow][j + startCol][num] == 1)
             {
                 return 0;
             }
         }
     }
-    for(int i = 0; i < PENCILMARKS; i++)
-    {
-        if(board[row][column][i--] == 0)
-        {
-            return 0;
-        }
-    }
     return 1;
 }
+
 
 void shuffle(int unit[])
 {
@@ -67,15 +61,16 @@ void seed_random_units() {
     shuffle(unit);
 
     // Seed each 3x3 unit along the main diagonal of the puzzle with shuffled numbers
-    int k = 0; // Index for the shuffled array
+    int unit_i = 0; // Index for the shuffled array
     for (int i = 0; i < ROW; i += 3) {
         for (int j = 0; j < COLUMN; j += 3) {
             if (i == j) { // Seed along the main diagonal 0,0, 4,4, 7,7
-                k=0;
+                unit_i=0;
                 for (int u = 0; u < 3; u++) {
                     for (int v = 0; v < 3; v++) {
-                        board[i + u][j + v][0] = unit[k++];
-                        board[i + u][j + v][unit[k-1]] = 1;
+                        board[i + u][j + v][0] = unit[unit_i++];
+                        //set flag to 1
+                        board[i + u][j + v][unit[unit_i-1]] = 1;
                     }
                 }
             }
@@ -99,29 +94,47 @@ int backtracking(int row, int column) {
             }
             else
             {
-                for(int i = 0; i < PENCILMARKS; i++)
+                for(int i = 0; i < 9; i++)
                 {
-                    if(validity_check(board,row,column,i--))
+                    if(validity_check(board,row,column,i))
                     {
                         board[row][column][0] = i;
-                        board[row][column][i] = 1;
+                       // board[row][column][i + 1] = 1;
                         if(backtracking(row,column+1))
                         {
                             return 1;
                         }
                         board[row][column][0] = 0;
-                        board[row][column][i] = 0;
+                        //board[row][column][i] = 0;
                     }
                 }
                 return 0;
             }
 }
 
-void display_board() {
-    for (int i = 0; i < ROW; i++) {
-        for (int j = 0; j < COLUMN; j++) {
-            printf("%d \0", board[i][j]);
+void display_board()
+{
+    for (int i = 0; i < ROW; i++)
+    {
+        for (int j = 0; j < COLUMN; j++)
+        {
+            printf("%d ", board[i][j][0]); // Display the main number
         }
         printf("\n");
+    }
+}
+
+void display_pencilmarks()
+{
+    for ( int i = 0; i < ROW; i++)
+    {
+        for (int j = 0; j < COLUMN; j++)
+        {
+            for ( int k = 0; k < PENCILMARKS; k++)
+            {
+                printf("%d ", board[i][j][k]);
+            }
+            printf("\n");
+        }
     }
 }
