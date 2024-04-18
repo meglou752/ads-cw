@@ -1,76 +1,66 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#include "sudoku.h"
 
-int board[ROW][COLUMN][PENCILMARKS];
+#define ROW 9
+#define COLUMN 9
+#define PENCILMARKS 11 // 1 extra for the actual value
 
-//can use the same validity checker for solution and player guess
-int validity_check(int board[ROW][COLUMN][PENCILMARKS], int row, int column, int num)
-{
+int board[ROW][COLUMN][PENCILMARKS] = {{{0}}};
+
+int validity_check(int row, int column, int num) {
     int startRow = row - row % 3;
     int startCol = column - column % 3;
 
-    for (int i = 0; i < ROW; i++)
-    {
-        if (board[row][i][num] == 1)
-        {
-            return 0;
+    for(int i = 0; i < ROW; i++) {
+        if(board[row][i][0] == num) return 0; // Check row
+    }
+
+    for(int i = 0; i < COLUMN; i++) {
+        if(board[i][column][0] == num) return 0; // Check column
+    }
+
+    for(int i = 0; i < 3; i++) {
+        for(int j = 0; j < 3; j++) {
+            if(board[i + startRow][j + startCol][0] == num) return 0; // Check unit
         }
     }
-    for (int i = 0; i < COLUMN; i++)
+
+    // Check pencil mark
+    if(board[row][column][num])
     {
-        if (board[i][column][num] == 1)
-        {
-            return 0;
-        }
+        return 0;
     }
-    for (int i = 0; i < UNIT_ROW; i++)
-    {
-        for (int j = 0; j < UNIT_COL; j++)
-        {
-            if (board[i + startRow][j + startCol][num] == 1)
-            {
-                return 0;
-            }
-        }
-    }
-    return 1;
+
+    return 1; // Valid placement
 }
 
-
-void shuffle(int unit[])
-{
+void shuffle(int unit[]) {
     int tmp;
-    for(int i = 0; i < 9; i++)
-    {
-            int random = (rand() % 9);
-            tmp = unit[i];
-            unit[i] = unit[random];
-            unit[random] = tmp;
+    for(int i = 0; i < 9; i++) {
+        int random = rand() % 9;
+        tmp = unit[i];
+        unit[i] = unit[random];
+        unit[random] = tmp;
     }
 }
 
 void seed_random_units() {
-    // Initialize array containing numbers 1 to 9
     int unit[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-    // Shuffle the array
     srand(time(NULL));
-    shuffle(unit);
 
-    // Seed each 3x3 unit along the main diagonal of the puzzle with shuffled numbers
-    int unit_i = 0; // Index for the shuffled array
+    int unit_index = 0;
     for (int i = 0; i < ROW; i += 3) {
         for (int j = 0; j < COLUMN; j += 3) {
-            if (i == j) { // Seed along the main diagonal 0,0, 4,4, 7,7
-                unit_i=0;
+            if (i == j) {
+                unit_index = 0;
+                shuffle(unit);
                 for (int u = 0; u < 3; u++) {
                     for (int v = 0; v < 3; v++) {
-                        board[i + u][j + v][0] = unit[unit_i++];
-                        //set flag to 1
-                        board[i + u][j + v][unit[unit_i-1]] = 1;
+                        int num = unit[unit_index++];
+                        board[i + u][j + v][0] = num; // Seed the number
+                        board[i + u][j + v][num] = 1; // Mark the seeded number as tried
                     }
                 }
             }
@@ -78,63 +68,34 @@ void seed_random_units() {
     }
 }
 
-
 int backtracking(int row, int column) {
-            if (row == ROW)
-            {
-                return 1;
-            }
-            else if(column == COLUMN)
-            {
-                return backtracking(row + 1, 0);
-            }
-            else if(board[row][column][0] != 0)
-            {
-                return backtracking(row, column+1);
-            }
-            else
-            {
-                for(int i = 0; i < 9; i++)
-                {
-                    if(validity_check(board,row,column,i))
-                    {
-                        board[row][column][0] = i;
-                       // board[row][column][i + 1] = 1;
-                        if(backtracking(row,column+1))
-                        {
-                            return 1;
-                        }
-                        board[row][column][0] = 0;
-                        //board[row][column][i] = 0;
-                    }
-                }
-                return 0;
-            }
+    if (row == 9) return 1; // Puzzle solved
+
+    if (column == 9) return backtracking(row + 1, 0);
+
+    if (board[row][column][0] != 0) return backtracking(row, column + 1);
+
+    for (int i = 1; i <= 9; i++) {
+        if (board[row][column][i] != 1 && validity_check(row, column, i)) {
+            board[row][column][0] = i; // Add value to board
+            if (backtracking(row, column + 1)) return 1; // Puzzle solved
+            board[row][column][0] = 0; // Reset value on the board
+        }
+    }
+    return 0; // No valid number found for this cell
 }
 
-void display_board()
-{
-    for (int i = 0; i < ROW; i++)
-    {
-        for (int j = 0; j < COLUMN; j++)
-        {
-            printf("%d ", board[i][j][0]); // Display the main number
+void display_board() {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COLUMN; j++) {
+            printf("%d ", board[i][j][0]);
         }
         printf("\n");
     }
 }
 
-void display_pencilmarks()
-{
-    for ( int i = 0; i < ROW; i++)
-    {
-        for (int j = 0; j < COLUMN; j++)
-        {
-            for ( int k = 0; k < PENCILMARKS; k++)
-            {
-                printf("%d ", board[i][j][k]);
-            }
-            printf("\n");
-        }
-    }
+void initialise_board() {
+    seed_random_units();
+    backtracking(0, 0);
+    //display_board();
 }
