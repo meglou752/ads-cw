@@ -14,11 +14,10 @@ int main()
     {
         initialise_board();
     }
-    //display_board();
-
     end_time = clock();
     cpu_time_used = (((double) (end_time - start_time)) / CLOCKS_PER_SEC) / 10;
 
+    display_board();
     printf("Average CPU time used for basic algorithm (3d array (pencilmarking), int data types): %f seconds\n", cpu_time_used);
     printf("\n");
     return 0;
