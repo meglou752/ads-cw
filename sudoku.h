@@ -8,8 +8,8 @@
 #define POSSVAL 9
 #define EMPTY_CELL 0
 
-int validity_check(char board[ROW][COLUMN], int row, int column, int num);
-void shuffle(int unit[]);
+int validity_check(char board[ROW][COLUMN], int row, int column, char num);
+void shuffle(char unit[]);
 void seed_random_units();
 int backtracking(int row, int column);
 void display_board();

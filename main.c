@@ -7,7 +7,7 @@ int main()
 {
 
     srand(time(NULL));
-    /*
+
     clock_t start_time, end_time;
     double cpu_time_used;
 
@@ -22,7 +22,5 @@ int main()
     end_time = clock();
     cpu_time_used = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
     printf("Average CPU time, based on 1000 iterations, for basic algorithm (2d array, char data types): %f seconds\n", cpu_time_used);
-     */
-    initialise_board();
     return 0;
 }

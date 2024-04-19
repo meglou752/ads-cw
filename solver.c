@@ -2,16 +2,25 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
+#include "sudoku.h"
 
 // Define the Sudoku board dimensions
 #define ROW 9
 #define COLUMN 9
 
 // Global Sudoku board
-char board[ROW][COLUMN];
+char board[ROW][COLUMN] = {{'0','0','0','0','0','0','0','0','0'},
+                           {'0','0','0','0','0','0','0','0','0'},
+                           {'0','0','0','0','0','0','0','0','0'},
+                           {'0','0','0','0','0','0','0','0','0'},
+                           {'0','0','0','0','0','0','0','0','0'},
+                           {'0','0','0','0','0','0','0','0','0'},
+                           {'0','0','0','0','0','0','0','0','0'},
+                           {'0','0','0','0','0','0','0','0','0'},
+                           {'0','0','0','0','0','0','0','0','0'}};
 
 // Function to check the validity of placing a number at a certain position on the board
-int validity_check(int row, int column, char num)
+int validity_check(char board[ROW][COLUMN], int row, int column, char num)
 {
     int startRow = row - row % 3;
     int startCol = column - column % 3;
@@ -40,9 +49,9 @@ int validity_check(int row, int column, char num)
 }
 
 // Function to shuffle an array of integers
-void shuffle(int unit[])
+void shuffle(char unit[])
 {
-    int tmp;
+    char tmp;
     for(int i = 0; i < 9; i++)
     {
         int random = rand() % 9;
@@ -55,7 +64,7 @@ void shuffle(int unit[])
 // Function to seed random numbers in each 3x3 unit along the main diagonal of the puzzle
 void seed_random_units() {
     // Initialize array containing numbers 1 to 9
-    int unit[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    char unit[9] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
     // Shuffle the array
     srand(time(NULL));
@@ -69,7 +78,7 @@ void seed_random_units() {
                 shuffle(unit);
                 for (int u = 0; u < 3; u++) {
                     for (int v = 0; v < 3; v++) {
-                        board[i + u][j + v] = unit[k++] + '0';
+                        board[i + u][j + v] = unit[k++];
                     }
                 }
             }
@@ -93,11 +102,11 @@ int backtracking(int row, int column) {
     }
     else
     {
-        for(int i = 1; i <= 9; i++) // Try placing numbers 1 to 9
+        for(char i = '1'; i <= '9'; i++) // Try placing numbers 1 to 9
         {
-            if(validity_check(row, column, i + '0'))
+            if(validity_check(board, row, column, i))
             {
-                board[row][column] = i + '0';
+                board[row][column] = i;
                 if(backtracking(row, column + 1))
                 {
                     return 1; // Puzzle solved
@@ -117,11 +126,4 @@ void display_board() {
         }
         printf("\n");
     }
-}
-
-void initialise_board()
-{
-    seed_random_units();
-    backtracking(0,0);
-    display_board();
 }
