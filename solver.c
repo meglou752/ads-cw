@@ -69,7 +69,6 @@ void seed_random_units() {
 
     // Shuffle the array
     srand(time(NULL));
-    shuffle(unit);
 
     // Seed each 3x3 unit along the main diagonal of the puzzle with shuffled numbers
     int k = 0; // Index for the shuffled array
@@ -77,6 +76,7 @@ void seed_random_units() {
         for (int j = 0; j < COLUMN; j += 3) {
             if (i == j) { // Seed along the main diagonal
                 k = 0;
+                shuffle(unit);
                 for (int u = 0; u < 3; u++) {
                     for (int v = 0; v < 3; v++) {
                         board[i + u][j + v] = unit[k++];
