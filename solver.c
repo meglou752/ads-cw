@@ -2,25 +2,16 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#include "sudoku.h"
 
 // Define the Sudoku board dimensions
 #define ROW 9
 #define COLUMN 9
 
 // Global Sudoku board
-int board[ROW][COLUMN] = {{0,0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0,0}};
+char board[ROW][COLUMN];
 
 // Function to check the validity of placing a number at a certain position on the board
-int validity_check(int board[ROW][COLUMN], int row, int column, int num)
+int validity_check(int row, int column, char num)
 {
     int startRow = row - row % 3;
     int startCol = column - column % 3;
@@ -49,7 +40,7 @@ int validity_check(int board[ROW][COLUMN], int row, int column, int num)
 }
 
 // Function to shuffle an array of integers
-int shuffle(int unit[])
+void shuffle(int unit[])
 {
     int tmp;
     for(int i = 0; i < 9; i++)
@@ -59,7 +50,6 @@ int shuffle(int unit[])
         unit[i] = unit[random];
         unit[random] = tmp;
     }
-    return 0;
 }
 
 // Function to seed random numbers in each 3x3 unit along the main diagonal of the puzzle
@@ -79,7 +69,7 @@ void seed_random_units() {
                 shuffle(unit);
                 for (int u = 0; u < 3; u++) {
                     for (int v = 0; v < 3; v++) {
-                        board[i + u][j + v] = unit[k++];
+                        board[i + u][j + v] = unit[k++] + '0';
                     }
                 }
             }
@@ -97,7 +87,7 @@ int backtracking(int row, int column) {
     {
         return backtracking(row + 1, 0);
     }
-    else if(board[row][column] != 0)
+    else if(board[row][column] != '0')
     {
         return backtracking(row, column + 1);
     }
@@ -105,14 +95,14 @@ int backtracking(int row, int column) {
     {
         for(int i = 1; i <= 9; i++) // Try placing numbers 1 to 9
         {
-            if(validity_check(board, row, column, i))
+            if(validity_check(row, column, i + '0'))
             {
-                board[row][column] = i;
+                board[row][column] = i + '0';
                 if(backtracking(row, column + 1))
                 {
                     return 1; // Puzzle solved
                 }
-                board[row][column] = 0; // Backtrack
+                board[row][column] = '0'; // Backtrack
             }
         }
         return 0; // No valid number found for this cell
@@ -123,8 +113,15 @@ int backtracking(int row, int column) {
 void display_board() {
     for (int i = 0; i < ROW; i++) {
         for (int j = 0; j < COLUMN; j++) {
-            printf("%d ", board[i][j]);
+            printf("%c ", board[i][j]);
         }
         printf("\n");
     }
+}
+
+void initialise_board()
+{
+    seed_random_units();
+    backtracking(0,0);
+    display_board();
 }
