@@ -67,6 +67,18 @@ build CMakeFiles/ADS.dir/solver.c.o: C_COMPILER__ADS_unscanned_Debug /Users/mega
   OBJECT_DIR = CMakeFiles/ADS.dir
   OBJECT_FILE_DIR = CMakeFiles/ADS.dir
 
+build CMakeFiles/ADS.dir/output_grid.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganmcleod/Desktop/Uni/ADS/output_grid.c || cmake_object_order_depends_target_ADS
+  DEP_FILE = CMakeFiles/ADS.dir/output_grid.c.o.d
+  FLAGS = -g -std=gnu99 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/ADS.dir
+  OBJECT_FILE_DIR = CMakeFiles/ADS.dir
+
+build CMakeFiles/ADS.dir/file_handling.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganmcleod/Desktop/Uni/ADS/file_handling.c || cmake_object_order_depends_target_ADS
+  DEP_FILE = CMakeFiles/ADS.dir/file_handling.c.o.d
+  FLAGS = -g -std=gnu99 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/ADS.dir
+  OBJECT_FILE_DIR = CMakeFiles/ADS.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target ADS
@@ -75,7 +87,7 @@ build CMakeFiles/ADS.dir/solver.c.o: C_COMPILER__ADS_unscanned_Debug /Users/mega
 #############################################
 # Link the executable ADS
 
-build ADS: C_EXECUTABLE_LINKER__ADS_Debug CMakeFiles/ADS.dir/main.c.o CMakeFiles/ADS.dir/interface.c.o CMakeFiles/ADS.dir/solver.c.o
+build ADS: C_EXECUTABLE_LINKER__ADS_Debug CMakeFiles/ADS.dir/main.c.o CMakeFiles/ADS.dir/interface.c.o CMakeFiles/ADS.dir/solver.c.o CMakeFiles/ADS.dir/output_grid.c.o CMakeFiles/ADS.dir/file_handling.c.o
   FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
   OBJECT_DIR = CMakeFiles/ADS.dir
   POST_BUILD = :

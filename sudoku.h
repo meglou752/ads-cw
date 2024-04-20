@@ -1,21 +1,20 @@
 #ifndef ADS_SUDOKU_H
 #define ADS_SUDOKU_H
 
-#include <stdbool.h>
-
 #define COLUMN 9
 #define ROW 9
-#define UNIT_ROW 3
-#define UNIT_COL 9
+#define PENCILMARKS 11
 
+#include "interface.h"
+#include "solver.h"
+#include "output_grid.h"
 
-int display(int board[][COLUMN]); // Function declaration
-//int validity_check(int board[ROW][COLUMN], int row, int column, int num);
-int validity_check(int row, int column, int num);
+#include <printf.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <time.h>
 
-void shuffle(int unit[]);
-void seed_random_units();
-int backtracking(int row, int column);
-void display_board();
-void initialise_board();
 #endif // ADS_SUDOKU_H
