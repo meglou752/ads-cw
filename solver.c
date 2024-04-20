@@ -1,14 +1,23 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include "solver.h"
 
-#define ROW 9
-#define COLUMN 9
-#define PENCILMARKS 11 // 1 extra for the actual value
+/**
+ * Generate a solution
+ */
+/*
+void initialise_board(int num_to_remove) {
 
-int board[ROW][COLUMN][PENCILMARKS] = {{{0}}};
+}*/
 
-int validity_check(int row, int column, int num) {
+
+/**
+ * Check validity of the current number to try in the specified coordinate by row, column, unit and pencilmark state.
+ * 3D array is utilised for pencilmarking for increased algorithm efficiency.
+ * @param row Row coordinate for the current cell
+ * @param column Column coordinate for the current cell
+ * @param num Number to try in the current cell
+ * @return 1 for valid placement; 0 for invalid placement
+ */
+int validity_check(int board[ROW][COLUMN][PENCILMARKS], int row, int column, int num) {
     int startRow = row - row % 3;
     int startCol = column - column % 3;
 
@@ -35,27 +44,35 @@ int validity_check(int row, int column, int num) {
     return 1; // Valid placement
 }
 
-void shuffle(int unit[]) {
+/**
+ * Randomly shuffle an array of numbers of specified length
+ * @param unit Array to be shuffled
+ */
+void shuffle(int unit[], int size) {
     int tmp;
-    for(int i = 0; i < 9; i++) {
-        int random = rand() % 9;
-        tmp = unit[i];
-        unit[i] = unit[random];
-        unit[random] = tmp;
+    for(int i = 0; i < size; i++) {
+        int random = rand() % size; // Generate random index, with param as upper constraint
+        tmp = unit[i]; // Set the value in a temporary variable
+        unit[i] = unit[random]; // Set the value to the random indexes number to swap with
+        unit[random] = tmp; // Assign the initial index value to the randomly
     }
 }
 
-void seed_random_units() {
+/**
+ * Place a randomly shuffled array in each 'unit', on the diagonal, to avoid conflicts and improve randomness of the solution
+ */
+void seed_random_units(int board[ROW][COLUMN][PENCILMARKS]) {
     int unit[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-    srand(time(NULL));
+    srand(time(NULL)); // Seed random function
 
     int unit_index = 0;
     for (int i = 0; i < ROW; i += 3) {
         for (int j = 0; j < COLUMN; j += 3) {
+            // If coord is 0,0 , 4,4 , or 7,7, place a shuffled array in current unit
             if (i == j) {
                 unit_index = 0;
-                shuffle(unit);
+                shuffle(unit, 9);
                 for (int u = 0; u < 3; u++) {
                     for (int v = 0; v < 3; v++) {
                         int num = unit[unit_index++];
@@ -68,34 +85,82 @@ void seed_random_units() {
     }
 }
 
-int backtracking(int row, int column) {
-    if (row == 9) return 1; // Puzzle solved
+/**
+ * Transverse through the board, trying for valid values for each cell, until a valid solution is found
+ * @param row Current row
+ * @param column Current column
+ * @return 1 for solved board; 0 for incomplete/invalid board
+ */
+int backtracking(int board[ROW][COLUMN][PENCILMARKS], int row, int column) {
+    if (row == ROW) return 1; // Puzzle solved
 
-    if (column == 9) return backtracking(row + 1, 0);
+    if (column == COLUMN) return backtracking(board, row + 1, 0);
 
-    if (board[row][column][0] != 0) return backtracking(row, column + 1);
+    if (board[row][column][0] != 0) return backtracking(board, row, column + 1);
 
     for (int i = 1; i <= 9; i++) {
-        if (board[row][column][i] != 1 && validity_check(row, column, i)) {
+        if (board[row][column][i] != 1 && validity_check(board, row, column, i)) {
             board[row][column][0] = i; // Add value to board
-            if (backtracking(row, column + 1)) return 1; // Puzzle solved
+            if (backtracking(board, row, column + 1)) return 1; // Puzzle solved
             board[row][column][0] = 0; // Reset value on the board
         }
     }
-    return 0; // No valid number found for this cell
+    return 0; // No valid number found for this cell, backtrack
 }
 
-void display_board() {
-    for (int i = 0; i < ROW; i++) {
-        for (int j = 0; j < COLUMN; j++) {
-            printf("%d ", board[i][j][0]);
+int reverse_backtracking(int board[ROW][COLUMN][PENCILMARKS], int row, int column) {
+    if (row == ROW) return 1; // Puzzle solved
+
+    if (column == COLUMN) return reverse_backtracking(board, row + 1, 0);
+
+    if (board[row][column][0] != 0) return reverse_backtracking(board, row, column + 1);
+
+    for (int i = 9; i >= 1; i--) { // Loop from 9 to 1
+        if (board[row][column][i] != 1 && validity_check(board, row, column, i)) {
+            board[row][column][0] = i; // Add value to board
+            if (reverse_backtracking(board, row, column + 1)) return 1; // Puzzle solved
+            board[row][column][0] = 0; // Reset value on the board
         }
-        printf("\n");
     }
+    return 0; // No valid number found for this cell, backtrack
 }
 
-void initialise_board() {
-    seed_random_units();
-    backtracking(0, 0);
-    //display_board();
+
+
+
+
+//duplicate board
+void duplicate_board(int input[ROW][COLUMN][PENCILMARKS], int output[ROW][COLUMN][PENCILMARKS])
+{
+        for (int i = 0; i < ROW; i++) {
+            for (int j = 0; j < COLUMN; j++) {
+                output[i][j][0] = input[i][j][0];
+            }
+        }
+}
+
+/**
+ * Function to generate random coordinates based on difficulty, time complexity O(n)
+ * @param board 3D array representing the board to be edited
+ * @param num_to_remove Numbers to be removed from the grid, depends on difficulty level
+ */
+void remove_numbers(int board[ROW][COLUMN][PENCILMARKS], int num_to_remove)
+{
+    // Declare and initialise array with nums 1-81
+    int nums_to_remove[ROW*COLUMN];
+    for(int i = 0; i < ROW*COLUMN; i++)
+    {
+        nums_to_remove[i] = i + 1;
+    }
+
+    shuffle(nums_to_remove, ROW*COLUMN); // Shuffle array
+
+    for (int j = 0; j < num_to_remove; j++) // Loop through the amount of nums based on difficulty
+    {
+        int x = (nums_to_remove[j] - 1) / ROW; // Calculate x coordinate
+        int y = (nums_to_remove[j] - 1) % COLUMN; // Calculate y coordinate
+        board[x][y][0] = 0; // Set to 0 on the board
+    }
+    //printf("Removing numbers...\n");
+    //sleep(1);
 }

@@ -8,4 +8,8 @@ add_executable(ADS main.c
         sudoku.h
         solver.c
         solver.h
-        interface.h)
+        interface.h
+        output_grid.c
+        output_grid.h
+        file_handling.c
+        file_handling.h)
