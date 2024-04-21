@@ -1,9 +1,9 @@
 #include "sudoku.h"
 int solution[ROW][COLUMN][PENCILMARKS] = {{{0}}};
-int solution_playable[ROW][COLUMN][PENCILMARKS] = {{{0}}};
-int solution_numbers_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
+int solution_playable[ROW][COLUMN] = {{0}};
+int solution_numbers_removed[ROW][COLUMN] = {{0}};
 int bot_solution[ROW][COLUMN][PENCILMARKS] = {{{0}}};
-int bot_solution_nums_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
+int bot_solution_nums_removed[ROW][COLUMN] = {{0}};
 int test_grid_forward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_backward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int moves_top = -1,redo_top = -1, undo_stack[MAX_SIZE];
@@ -25,7 +25,7 @@ int check_uniqueness()
             }
         }
     }
-    duplicate_board(solution_numbers_removed,solution_playable);
+    dup(solution_numbers_removed,solution_playable);
     return 1;
 }
 
@@ -56,11 +56,18 @@ void generate_unique_solution(const int num_to_remove) {
 }
 
 
-
-void place_move(int board[ROW][COLUMN][PENCILMARKS], int x,int y, int number, int difficulty_level)
+/**
+ * Place a move on the board if valid
+ * @param board Board to be edited
+ * @param x X coordinate
+ * @param y Y coordinate
+ * @param number Value to be placed
+ * @param difficulty_level Level of difficulty; will affect prints
+ */
+void place_move(int board[ROW][COLUMN], int x,int y, int number, int difficulty_level)
 {
     // Check if the cell is fixed
-    if (solution_numbers_removed[y][x][0] != 0)
+    if (solution_numbers_removed[y][x] != 0)
     {
         printf("You cannot edit this cell.\n");
     }
@@ -72,7 +79,7 @@ void place_move(int board[ROW][COLUMN][PENCILMARKS], int x,int y, int number, in
     // Valid, place number in board
     else
     {
-        board[y][x][0] = number;
+        board[y][x] = number;
         display_based_on_difficulty();
         Move move = {x, y, number};
         push(&moves_top, moves, move);
@@ -82,14 +89,20 @@ void place_move(int board[ROW][COLUMN][PENCILMARKS], int x,int y, int number, in
     }
 }
 
-void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y)
+/**
+ * Reveal the value of a square to the user
+ * @param board Board to be edited
+ * @param x X coordinate
+ * @param y Y coordinate
+ */
+void reveal_hint(int board[ROW][COLUMN],int x, int y)
 {
-    if(board[y][x][0] == 0)
+    if(board[y][x] == 0)
     {
-        board[y][x][0] = solution[y][x][0];
+        board[y][x] = solution[y][x][0];
         display_based_on_difficulty();
         // Add to move history stack
-        Move move = {x, y, board[x][y][0]};
+        Move move = {x, y, board[x][y]};
         push(&moves_top, moves, move);
     }
     else
@@ -98,22 +111,33 @@ void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y)
     }
 }
 
-void delete_move(int board[ROW][COLUMN][PENCILMARKS], int x, int y)
+/**
+ * Delete the value of a cell, if input by the user
+ * @param board Board to be edited
+ * @param x X coordinate
+ * @param y Y coordinate
+ */
+void delete_move(int board[ROW][COLUMN], int x, int y)
 {
-    if(solution_numbers_removed[y][x][0] != 0)
+    if(solution_numbers_removed[y][x] != 0)
     {
         printf("You cannot edit this cell.\n");
     }
     else
     {
-        board[y][x][0] = 0;
+        board[y][x] = 0;
         display_based_on_difficulty();
-        Move move = {x, y, board[x][y][0]};
+        Move move = {x, y, board[x][y]};
         push(&moves_top, moves, move);
     }
 }
 
-
+/**
+ * Push value onto stack
+ * @param top Pointer to top element of stack
+ * @param stack Stack of struct instances representing moves
+ * @param move The current moves' struct
+ */
 void push(int *top, Move stack[], Move move)
 {
     if (*top == MAX_SIZE - 1)
@@ -128,6 +152,11 @@ void push(int *top, Move stack[], Move move)
     }
 }
 
+/**
+ * Pop value from stack
+ * @param top Pointer to top element of stack
+ * @param stack Stack of struct instances representing moves
+ */
 void pop(int *top, Move stack[])
 {
     if (*top == -1)
@@ -145,7 +174,7 @@ void pop(int *top, Move stack[])
  * Undo move from the board and add to redo stack
  * @param board Board to be edited
  */
-void undo(int board[ROW][COLUMN][PENCILMARKS])
+void undo(int board[ROW][COLUMN])
 {
     // Check if there are any moves to undo
     if (moves_top == -1)
@@ -159,14 +188,14 @@ void undo(int board[ROW][COLUMN][PENCILMARKS])
     push(&redo_top, redo_stack, topMove);
     // Update the board with the values from the top move
     // If the move is not a deletion, set the value to 0
-    if(board[topMove.y][topMove.x][0] != 0) {
-        board[topMove.y][topMove.x][0] = 0; // Set the cell value to 0
+    if(board[topMove.y][topMove.x] != 0) {
+        board[topMove.y][topMove.x] = 0; // Set the cell value to 0
         display_based_on_difficulty();
     }
     // If deletion, add the value back from the solution
     else
     {
-        board[topMove.y][topMove.x][0] = solution[topMove.y][topMove.x][0];
+        board[topMove.y][topMove.x] = solution[topMove.y][topMove.x][0];
         display_game(board); // Display the updated board
         if(difficulty_level == 50)
         {
@@ -184,7 +213,7 @@ void undo(int board[ROW][COLUMN][PENCILMARKS])
  * Add last undone move to the board
  * @param board Board to be edited
  */
-void redo(int board[ROW][COLUMN][PENCILMARKS])
+void redo(int board[ROW][COLUMN])
 {
     // Check if there are any moves to redo
     if (redo_top == -1)
@@ -197,14 +226,14 @@ void redo(int board[ROW][COLUMN][PENCILMARKS])
     Move topMove = redo_stack[redo_top];
 
     // If normal move, add back to the board by value
-    if(board[topMove.y][topMove.x][0] == 0) {
-        board[topMove.y][topMove.x][0] = topMove.number; // Set the cell value to 0
+    if(board[topMove.y][topMove.x] == 0) {
+        board[topMove.y][topMove.x] = topMove.number; // Set the cell value to 0
         display_based_on_difficulty();
     }
     // If deletion, add the value back from the solution (inaccessible by struct here)
     else
     {
-        board[topMove.y][topMove.x][0] = 0;
+        board[topMove.y][topMove.x] = 0;
         display_based_on_difficulty();
     }
 

@@ -20,7 +20,6 @@ void interface()
  */
 void home()
 {
-
     printf("\t   ******SUDOKU GAME******\n");
     printf("\t        Pick an option: \n");
     printf("\t    A to start a new game\n");
@@ -108,7 +107,7 @@ int difficulty() {
 /**
  * Basic display function for easy and medium difficulty
  */
-void display_game(int board[ROW][COLUMN][PENCILMARKS])
+void display_game(int board[ROW][COLUMN])
 {
     printf("\n  ◦ 0   1   2 ◦ 3   4   5 ◦ 6   7   8 ◦\n");
     printf("◦ ╔═══════════╤═══════════╤═══════════╗");
@@ -135,7 +134,7 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
             }
             else if (j == 8)
             {
-                printf("%2d ", board[i][j][0]);
+                printf("%2d ", board[i][j]);
                 printf(" ║ ");
                 if(i == 0)
                 {
@@ -159,7 +158,7 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
                 }
             }
             if(j != 8) {
-                printf("%2d ", board[i][j][0]);
+                printf("%2d ", board[i][j]);
             }
         }
         printf("\n");
@@ -182,11 +181,11 @@ void progress()
     {
         for (int j = 0; j < COLUMN; j++)
         {
-            if (solution_numbers_removed[i][j][0] == 0)
+            if (solution_numbers_removed[i][j] == 0)
             {
                 initial++;
             }
-            if (solution_playable[i][j][0] == 0)
+            if (solution_playable[i][j] == 0)
             {
                 changed++;
             }
@@ -243,7 +242,7 @@ void new_game(int difficulty_level)
  * @param board Playable board
  * @param difficulty_level
  */
-void handle_input(int board[ROW][COLUMN][PENCILMARKS], int difficulty_level)
+void handle_input(int board[ROW][COLUMN], int difficulty_level)
 {
     int x, y, number;
     char input;
@@ -327,13 +326,13 @@ void clear_input_buffer() {
  * @param board Playable board
  * @return 0 for incomplete; 1 for complete
  */
-int game_complete(int board[ROW][COLUMN][PENCILMARKS])
+int game_complete(int board[ROW][COLUMN])
 {
     for(int i = 0; i < ROW; i++)
     {
         for (int j = 0; j < COLUMN; j++)
         {
-            if (board[i][j][0] == 0)
+            if (board[i][j] == 0)
             {
                 return 0;
             }
@@ -367,7 +366,7 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
  * @param board Playable board
  * @param bot_board  Bot, non-playable board
  */
-void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_board[ROW][COLUMN][PENCILMARKS])
+void display_game_hard_difficulty(int board[ROW][COLUMN], int bot_board[ROW][COLUMN])
 {
     printf("\n  ◦ 0   1   2 ◦ 3   4   5 ◦ 6   7   8 ◦\t\t\t\t\t\t\t\t\t\t\t   BOT GRID");
     printf("\n◦ ╔═══════════╤═══════════╤═══════════╗\t\t\t\t\t\t\t\t╔═══════════╤═══════════╤═══════════╗");
@@ -394,7 +393,7 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
             }
             else if (j == 8)
             {
-                printf("%2d ", board[i][j][0]);
+                printf("%2d ", board[i][j]);
                 printf(" ║");
                 if(i == 0)
                 {
@@ -418,7 +417,7 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 }
             }
             if(j != 8) {
-                printf("%2d ", board[i][j][0]);
+                printf("%2d ", board[i][j]);
             }
         }
 
@@ -430,13 +429,13 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 if (j % 3 == 0 && j != 0) {
                     printf(" │ "); // Print vertical divider after every 3 columns within a row
                 } else if (j == 0) {
-                    printf("    ║ ", i);
+                    printf("    ║ ");
                 } else if (j == 8) {
-                    printf("%2d ", bot_board[i][j][0]);
+                    printf("%2d ", bot_board[i][j]);
                     printf(" ║ ");
                 }
                 if (j != 8) {
-                    printf("%2d ", bot_board[i][j][0]);
+                    printf("%2d ", bot_board[i][j]);
                 }
             }
         }
@@ -447,13 +446,13 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 if (j % 3 == 0 && j != 0) {
                     printf(" │ "); // Print vertical divider after every 3 columns within a row
                 } else if (j == 0) {
-                    printf("    ║ ", i);
+                    printf("    ║ ");
                 } else if (j == 8) {
-                    printf("%2d ", bot_board[i][j][0]);
+                    printf("%2d ", bot_board[i][j]);
                     printf(" ║ ");
                 }
                 if (j != 8) {
-                    printf("%2d ", bot_board[i][j][0]);
+                    printf("%2d ", bot_board[i][j]);
                 }
             }
         }
@@ -464,13 +463,13 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 if (j % 3 == 0 && j != 0) {
                     printf(" │ "); // Print vertical divider after every 3 columns within a row
                 } else if (j == 0) {
-                    printf("    ║ ", i);
+                    printf("    ║ ");
                 } else if (j == 8) {
-                    printf("%2d ", bot_board[i][j][0]);
+                    printf("%2d ", bot_board[i][j]);
                     printf(" ║ ");
                 }
                 if (j != 8) {
-                    printf("%2d ", bot_board[i][j][0]);
+                    printf("%2d ", bot_board[i][j]);
                 }
             }
         }
@@ -481,13 +480,13 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 if (j % 3 == 0 && j != 0) {
                     printf(" │ "); // Print vertical divider after every 3 columns within a row
                 } else if (j == 0) {
-                    printf("    ║ ", i);
+                    printf("    ║ ");
                 } else if (j == 8) {
-                    printf("%2d ", bot_board[i][j][0]);
+                    printf("%2d ", bot_board[i][j]);
                     printf(" ║ ");
                 }
                 if (j != 8) {
-                    printf("%2d ", bot_board[i][j][0]);
+                    printf("%2d ", bot_board[i][j]);
                 }
             }
         }
@@ -498,13 +497,13 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 if (j % 3 == 0 && j != 0) {
                     printf(" │ "); // Print vertical divider after every 3 columns within a row
                 } else if (j == 0) {
-                    printf("    ║ ", i);
+                    printf("    ║ ");
                 } else if (j == 8) {
-                    printf("%2d ", bot_board[i][j][0]);
+                    printf("%2d ", bot_board[i][j]);
                     printf(" ║ ");
                 }
                 if (j != 8) {
-                    printf("%2d ", bot_board[i][j][0]);
+                    printf("%2d ", bot_board[i][j]);
                 }
             }
         }
