@@ -2,7 +2,6 @@
 int solution[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int solution_playable[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int solution_numbers_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
-//int check_unique[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_forward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_backward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 
@@ -78,6 +77,19 @@ void place_move(int board[ROW][COLUMN][PENCILMARKS], int x,int y, int number)
         board[y][x][0] = number;
         printf("Placed move at %d,%d %d;\n", x, y, number);
         display_game(board);
+    }
+}
+
+void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y)
+{
+    if(board[y][x][0] == 0)
+    {
+        board[y][x][0] = solution[y][x][0];
+        display_game(board);
+    }
+    else
+    {
+        printf("Cell is already filled\n");
     }
 }
 

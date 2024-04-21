@@ -1,6 +1,6 @@
 
 #include "sudoku.h"
-#define EASY 35
+#define EASY 5
 #define MEDIUM 40
 #define HARD 50
 #define EASY_PERCENTAGE_PM 0.04

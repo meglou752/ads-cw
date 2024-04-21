@@ -53,20 +53,21 @@ int difficulty() {
  */
 void display_game(int board[ROW][COLUMN][PENCILMARKS])
 {
-    system("clear");
-
-    printf("\n\t      To place a move: P \n");
-    printf("\t\t  To save and exit: S \n");
-    printf("\t          To undo:  U\n");
-    printf("\t\t      To redo: R \n");
-    printf("  ◦ 0   1   2 ◦ 3   4   5 ◦ 6   7   8 ◦\n");
+    printf("\n  ◦ 0   1   2 ◦ 3   4   5 ◦ 6   7   8 ◦\n");
     printf("◦ ╔═══════════╤═══════════╤═══════════╗");
     printf("\n");
 
     for (int i = 0; i < ROW; i++) {
         if (i % 3 == 0 && i != 0) {
-            printf("◦ ╟───────────│───────────│───────────╢\n"); // Print horizontal divider after every 3 rows
+            if(i != 3) {
+                printf("◦ ╟───────────│───────────│───────────╢\n"); // Print horizontal divider after every 3 rows
+            }
+            else
+            {
+                printf("◦ ╟───────────│───────────│───────────╢ To get a hint: H\n");
+            }
         }
+
         for (int j = 0; j < COLUMN; j++) {
             if (j % 3 == 0 && j != 0) {
                 printf(" │ "); // Print vertical divider after every 3 columns within a row
@@ -79,6 +80,26 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
             {
                 printf("%2d ", board[i][j][0]);
                 printf(" ║ ");
+                if(i == 0)
+                {
+                    printf("To place a move: P");
+                }
+                else if( i == 1)
+                {
+                    printf("To undo:  U");
+                }
+                else if (i == 2)
+                {
+                    printf("To redo: R ");
+                }
+                else if (i == 3)
+                {
+                    printf("To delete a move: D");
+                }
+                else if (i == 4)
+                {
+                    printf("To save and exit: S ");
+                }
             }
             if(j != 8) {
                 printf("%2d ", board[i][j][0]);
@@ -235,7 +256,18 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
                 clear_input_buffer();
             }
             break;
-
+        case 'H':
+            printf("Enter cell location (format: x,y): ");
+            if (scanf("%d,%d", &x,&y) == 2)
+            {
+                reveal_hint(board,x,y);
+            }
+            else
+            {
+                printf("Invalid cell location\n");
+                clear_input_buffer();
+            }
+            break;
     }
 }
 
@@ -284,6 +316,18 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
         }
     }
     // Game complete
-    printf("Game complete!\n");
+    char save;
+    printf("\nGame complete! Would you like to save the game? (Y/N)\n");
+    scanf(" %c", &save);
+    clear_input_buffer();
+    save = toupper((unsigned char)save);
+    if(save == 'Y')
+    {
+        save_game();
+    }
+    else
+    {
+        home();
+    }
     return 1;
 }
