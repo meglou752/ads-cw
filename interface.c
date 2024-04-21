@@ -239,11 +239,11 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
             break;
         case 'U':
             // Logic to undo
-            undo();
+            undo(solution_playable);
             break;
         case 'R':
             // Logic to redo
-            redo();
+            redo(solution_playable);
             break;
         case 'P': // Assuming 'P' as the command to place a move
             // Assuming the input format for placing a move is: x,y number
