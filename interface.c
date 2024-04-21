@@ -92,9 +92,44 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
 
 void progress()
 {
-    // Calculate percentage completed
+    // Initialize variables
+    int initial = 0, changed = 0, progress_num, progress_percentage, asterisk_value;
 
+    // Calculate difference
+    for (int i = 0; i < ROW; i++)
+    {
+        for (int j = 0; j < COLUMN; j++)
+        {
+            if (solution_numbers_removed[i][j][0] == 0)
+            {
+                initial++;
+            }
+            if (solution_playable[i][j][0] == 0)
+            {
+                changed++;
+            }
+        }
+    }
+
+    // Calculate progress percentage
+    if (initial != 0) {
+        progress_num = initial - changed;
+        progress_percentage = (progress_num * 100) / initial;
+    } else {
+        progress_percentage = 0;
+    }
+
+    asterisk_value = 39 * progress_percentage / 100; // Calculate number of asterisks
+    printf("  ");
+    // Display asterisks
+    for (int k = 0; k < asterisk_value; k++)
+    {
+        printf("*");
+    }
+    printf("%d%%", progress_percentage);
+    printf("\n");
 }
+
 
 /**
  * Home page interface logic
@@ -235,6 +270,7 @@ void clear_input_buffer() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+
 int game_complete(int board[ROW][COLUMN][PENCILMARKS])
 {
     for(int i = 0; i < ROW; i++)
@@ -248,5 +284,6 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
         }
     }
     // Game complete
+    printf("Game complete!\n");
     return 1;
 }
