@@ -268,6 +268,18 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
                 clear_input_buffer();
             }
             break;
+        case 'D':
+            printf("Enter cell location (format: x,y): ");
+            if (scanf("%d,%d", &x,&y) == 2)
+            {
+                delete_move(board,x,y);
+            }
+            else
+            {
+                printf("Invalid cell location\n");
+                clear_input_buffer();
+            }
+            break;
     }
 }
 

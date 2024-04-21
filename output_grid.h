@@ -8,4 +8,5 @@ void redo();
 void place_move(int board[ROW][COLUMN][PENCILMARKS], int x,int y, int number);
 void bot_level();
 void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y);
+void delete_move(int board[ROW][COLUMN][PENCILMARKS], int x, int y);
 

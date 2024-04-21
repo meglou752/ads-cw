@@ -75,7 +75,7 @@ void place_move(int board[ROW][COLUMN][PENCILMARKS], int x,int y, int number)
     else
     {
         board[y][x][0] = number;
-        printf("Placed move at %d,%d %d;\n", x, y, number);
+        //printf("Placed move at %d,%d %d;\n", x, y, number);
         display_game(board);
     }
 }
@@ -90,6 +90,19 @@ void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y)
     else
     {
         printf("Cell is already filled\n");
+    }
+}
+
+void delete_move(int board[ROW][COLUMN][PENCILMARKS], int x, int y)
+{
+    if(solution_numbers_removed[y][x][0] != 0)
+    {
+        printf("You cannot edit this cell.\n");
+    }
+    else
+    {
+        board[y][x][0] = 0;
+        display_game(board);
     }
 }
 
