@@ -6,7 +6,9 @@ extern int solution_numbers_removed[ROW][COLUMN][PENCILMARKS];
 extern int solution_playable[ROW][COLUMN][PENCILMARKS];
 extern int test_grid_forward[ROW][COLUMN][PENCILMARKS];
 extern int test_grid_backward[ROW][COLUMN][PENCILMARKS];
-
+extern int bot_solution[ROW][COLUMN][PENCILMARKS];
+extern int bot_solution_nums_removed[ROW][COLUMN][PENCILMARKS];
+extern int difficulty_level;
 //void initialise_board();
 int validity_check(int board[ROW][COLUMN][PENCILMARKS], int row, int column, int num);
 void shuffle(int unit[], int size);

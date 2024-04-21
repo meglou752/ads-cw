@@ -5,7 +5,61 @@
  * @return 1 for valid choice success; 0 for invalid choice
  */
 char difficulty_setting;
-int moves_counter;
+int difficulty_level;
+
+/**
+ * Entry point
+ */
+void interface()
+{
+    home();
+}
+
+/**
+ * Home page interface logic
+ */
+void home()
+{
+
+    printf("\t   ******SUDOKU GAME******\n");
+    printf("\t        Pick an option: \n");
+    printf("\t    A to start a new game\n");
+    printf("\t   B to continue an old game\n");
+    printf("\t          X to exit\n");
+    printf(("INPUT: "));
+    char input;
+    bool valid = false;
+    scanf(" %c", &input);
+    clear_input_buffer();
+    input = toupper((unsigned char) input);
+
+    while(!valid) {
+        switch (input) {
+            case 'A':
+                difficulty();
+                valid = true;
+                break;
+            case 'B':
+                restart_game();
+                valid = true;
+                break;
+            case 'X':
+                valid = true;
+                break;
+            default:
+                printf("%c is not valid, enter a valid choice: ", input);
+                scanf(" %c", &input);
+                input = toupper((unsigned char) input);
+                clear_input_buffer();
+                break;
+        }
+    }
+}
+
+/**
+ * Difficulty interface logic
+ * @return Validity of choice
+ */
 int difficulty() {
     printf("\n\t\t  SELECT DIFFICULTY\n");
     printf("\t        Pick an option: \n");
@@ -24,13 +78,16 @@ int difficulty() {
             case 'E':
                 valid = true;
                 new_game(EASY);
+                difficulty_level = EASY;
                 return 1;
             case 'M':
                 valid = true;
                 new_game(MEDIUM);
+                difficulty_level = MEDIUM;
                 return 1;
             case 'H':
                 valid = true;
+                difficulty_level = HARD;
                 new_game(HARD);
                 return 1;
             case 'B':
@@ -49,7 +106,7 @@ int difficulty() {
 
 
 /**
- * Basic display function
+ * Basic display function for easy and medium difficulty
  */
 void display_game(int board[ROW][COLUMN][PENCILMARKS])
 {
@@ -111,6 +168,10 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
     progress();
 }
 
+
+/**
+ * Calculate progress based on number of cells filled in compared to number of blank cells output originally
+ */
 void progress()
 {
     // Initialize variables
@@ -131,7 +192,6 @@ void progress()
             }
         }
     }
-
     // Calculate progress percentage
     if (initial != 0) {
         progress_num = initial - changed;
@@ -140,7 +200,7 @@ void progress()
         progress_percentage = 0;
     }
 
-    asterisk_value = 39 * progress_percentage / 100; // Calculate number of asterisks
+    asterisk_value = 39 * progress_percentage / 100; // Calculate weighting of asterisks
     printf("  ");
     // Display asterisks
     for (int k = 0; k < asterisk_value; k++)
@@ -152,63 +212,18 @@ void progress()
 }
 
 
-/**
- * Home page interface logic
- */
-void home()
-{
-
-    printf("\t   ******SUDOKU GAME******\n");
-    printf("\t        Pick an option: \n");
-    printf("\t    A to start a new game\n");
-    printf("\t   B to continue an old game\n");
-    printf("\t     C to see the rules\n");
-    printf("\t          X to exit\n");
-    printf(("INPUT: "));
-    char input;
-    bool valid = false;
-    scanf(" %c", &input);
-    clear_input_buffer();
-    input = toupper((unsigned char) input);
-
-    while(!valid) {
-        switch (input) {
-            case 'A':
-                difficulty();
-                valid = true;
-                break;
-            case 'B':
-                restart_game();
-                valid = true;
-                break;
-            case 'C':
-                how_to_play();
-                valid = true;
-                break;
-            case 'X':
-                valid = true;
-                break;
-            default:
-                printf("%c is not valid, enter a valid choice: ", input);
-                scanf(" %c", &input);
-                input = toupper((unsigned char) input);
-                clear_input_buffer();
-                break;
-        }
-    }
-}
 
 /**
- * Logic for new game option
+ * Logic for new game menu option
  */
 void new_game(int difficulty_level)
 {
-    // If valid choice is received, initialise and display board
+        // If valid choice is received, initialise and display board based on difficulty
         generate_unique_solution(difficulty_level);
         if(difficulty_level == HARD)
         {
-            display_game(solution_playable);
-            bot_level();
+            generate_bot_solution();
+            display_game_hard_difficulty(solution_playable, bot_solution_nums_removed);
         }
         else
         {
@@ -216,14 +231,19 @@ void new_game(int difficulty_level)
 
         }
 
+        // Game is in play until game_complete()
         while(!game_complete(solution_playable))
         {
-            handle_input(solution_playable);
+            handle_input(solution_playable, difficulty_level);
         }
     }
 
-
-void handle_input(int board[ROW][COLUMN][PENCILMARKS])
+/**
+ * Gameplay input handling
+ * @param board Playable board
+ * @param difficulty_level
+ */
+void handle_input(int board[ROW][COLUMN][PENCILMARKS], int difficulty_level)
 {
     int x, y, number;
     char input;
@@ -245,12 +265,11 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
             // Logic to redo
             redo(solution_playable);
             break;
-        case 'P': // Assuming 'P' as the command to place a move
-            // Assuming the input format for placing a move is: x,y number
+        case 'P':
             printf("Enter move (format: x,y number): ");
             if (scanf("%d,%d %d", &x, &y, &number) == 3) {
                 // Logic to place a move
-                place_move(board, x, y, number);
+                place_move(board, x, y, number, difficulty_level);
             } else {
                 printf("Invalid input\n");
                 clear_input_buffer();
@@ -285,25 +304,13 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
 
 /**
  * Logic for restart game option
+ * Needs implementation
  */
 void restart_game()
 {
+    load_game();
 }
 
-/**
- * Basic page of instructions for the user
- */
-void how_to_play()
-{
-}
-
-/**
- * Interface logic
- */
-void interface()
-{
-    home();
-}
 
 
 /**
@@ -315,6 +322,11 @@ void clear_input_buffer() {
 }
 
 
+/**
+ * Checks if the current state of the board is complete
+ * @param board Playable board
+ * @return 0 for incomplete; 1 for complete
+ */
 int game_complete(int board[ROW][COLUMN][PENCILMARKS])
 {
     for(int i = 0; i < ROW; i++)
@@ -342,4 +354,163 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
         home();
     }
     return 1;
+}
+
+
+
+
+
+// BOT FUNCTIONS //
+
+/**
+ * Display both the playable board and the bot board (looking for more efficient implementation)
+ * @param board Playable board
+ * @param bot_board  Bot, non-playable board
+ */
+void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_board[ROW][COLUMN][PENCILMARKS])
+{
+    printf("\n  ◦ 0   1   2 ◦ 3   4   5 ◦ 6   7   8 ◦\t\t\t\t\t\t\t\t\t\t\t   BOT GRID");
+    printf("\n◦ ╔═══════════╤═══════════╤═══════════╗\t\t\t\t\t\t\t\t╔═══════════╤═══════════╤═══════════╗");
+    printf("\n");
+
+    for (int i = 0; i < ROW; i++) {
+        if (i % 3 == 0 && i != 0) {
+            if(i != 3) {
+                printf("◦ ╟───────────┼───────────┼───────────╢\t\t\t\t\t\t\t\t╟───────────┼───────────┼───────────╢\n"); // Print horizontal divider after every 3 rows
+            }
+            else
+            {
+                printf("◦ ╟───────────┼───────────┼───────────╢ To get a hint: H\t\t\t╟───────────┼───────────┼───────────╢\n");
+            }
+        }
+
+        for (int j = 0; j < COLUMN; j++) {
+            if (j % 3 == 0 && j != 0) {
+                printf(" │ "); // Print vertical divider after every 3 columns within a row
+            }
+            else if(j == 0)
+            {
+                printf("%d ║ ",i);
+            }
+            else if (j == 8)
+            {
+                printf("%2d ", board[i][j][0]);
+                printf(" ║");
+                if(i == 0)
+                {
+                    printf("To place a move: P");
+                }
+                else if( i == 1)
+                {
+                    printf("To undo:  U");
+                }
+                else if (i == 2)
+                {
+                    printf("To redo: R ");
+                }
+                else if (i == 3)
+                {
+                    printf("To delete a move: D");
+                }
+                else if (i == 4)
+                {
+                    printf("To save and exit: S ");
+                }
+            }
+            if(j != 8) {
+                printf("%2d ", board[i][j][0]);
+            }
+        }
+
+
+        if(i == 0) {
+            // Printing the bot grid
+            printf("\t\t");
+            for (int j = 0; j < COLUMN; j++) {
+                if (j % 3 == 0 && j != 0) {
+                    printf(" │ "); // Print vertical divider after every 3 columns within a row
+                } else if (j == 0) {
+                    printf("    ║ ", i);
+                } else if (j == 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                    printf(" ║ ");
+                }
+                if (j != 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                }
+            }
+        }
+        else if(i == 1)
+        {
+            printf("\t\t\t\t");
+            for (int j = 0; j < COLUMN; j++) {
+                if (j % 3 == 0 && j != 0) {
+                    printf(" │ "); // Print vertical divider after every 3 columns within a row
+                } else if (j == 0) {
+                    printf("    ║ ", i);
+                } else if (j == 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                    printf(" ║ ");
+                }
+                if (j != 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                }
+            }
+        }
+        else if (i == 2)
+        {
+            printf("\t\t\t\t");
+            for (int j = 0; j < COLUMN; j++) {
+                if (j % 3 == 0 && j != 0) {
+                    printf(" │ "); // Print vertical divider after every 3 columns within a row
+                } else if (j == 0) {
+                    printf("    ║ ", i);
+                } else if (j == 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                    printf(" ║ ");
+                }
+                if (j != 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                }
+            }
+        }
+        else if (i == 3 || i == 4)
+        {
+            printf("\t\t");
+            for (int j = 0; j < COLUMN; j++) {
+                if (j % 3 == 0 && j != 0) {
+                    printf(" │ "); // Print vertical divider after every 3 columns within a row
+                } else if (j == 0) {
+                    printf("    ║ ", i);
+                } else if (j == 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                    printf(" ║ ");
+                }
+                if (j != 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                }
+            }
+        }
+        else
+        {
+            printf("\t\t\t\t\t\t\t");
+            for (int j = 0; j < COLUMN; j++) {
+                if (j % 3 == 0 && j != 0) {
+                    printf(" │ "); // Print vertical divider after every 3 columns within a row
+                } else if (j == 0) {
+                    printf("    ║ ", i);
+                } else if (j == 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                    printf(" ║ ");
+                }
+                if (j != 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                }
+            }
+        }
+
+        printf("\n");
+    }
+    printf("◦ ╚═══════════╧═══════════╧═══════════╝\t\t\t\t\t\t\t\t╚═══════════╧═══════════╧═══════════╝\n");
+    progress();
 }
