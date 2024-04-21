@@ -59,12 +59,13 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
     printf("\t\t  To save and exit: S \n");
     printf("\t          To undo:  U\n");
     printf("\t\t      To redo: R \n");
-    printf(" ╔═══════════╤═══════════╤═══════════╗");
+    printf("  ◦ 0   1   2 ◦ 3   4   5 ◦ 6   7   8 ◦\n");
+    printf("◦ ╔═══════════╤═══════════╤═══════════╗");
     printf("\n");
 
     for (int i = 0; i < ROW; i++) {
         if (i % 3 == 0 && i != 0) {
-            printf(" ╟───────────│───────────│───────────╢\n"); // Print horizontal divider after every 3 rows
+            printf("◦ ╟───────────│───────────│───────────╢\n"); // Print horizontal divider after every 3 rows
         }
         for (int j = 0; j < COLUMN; j++) {
             if (j % 3 == 0 && j != 0) {
@@ -72,7 +73,7 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
             }
             else if(j == 0)
             {
-                printf(" ║ ");
+                printf("%d ║ ",i);
             }
             else if (j == 8)
             {
@@ -85,7 +86,7 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
         }
         printf("\n");
     }
-    printf(" ╚═══════════╧═══════════╧═══════════╝\n");
+    printf("◦ ╚═══════════╧═══════════╧═══════════╝\n");
     progress();
 }
 
@@ -148,7 +149,16 @@ void new_game(int difficulty_level)
 {
     // If valid choice is received, initialise and display board
         generate_unique_solution(difficulty_level);
-        display_game(solution_playable);
+        if(difficulty_level == HARD)
+        {
+            display_game(solution_playable);
+            bot_level();
+        }
+        else
+        {
+            display_game(solution_playable);
+
+        }
 
         while(!game_complete(solution_playable))
         {

@@ -49,7 +49,7 @@ void generate_unique_solution(const int num_to_remove) {
         reverse_backtracking(test_grid_backward,0,0);
         attempts++;
     }
-    printf("No. of iterations to generate unique solution: %d\n", attempts);
+    //printf("No. of iterations to generate unique solution: %d\n", attempts);
 }
 
 void undo()
@@ -62,5 +62,26 @@ void redo()
 }
 void place_move(int board[ROW][COLUMN][PENCILMARKS], int x,int y, int number)
 {
-    printf("Place move at %d,%d %d;\n", x, y, number);
+    // Check if the cell is fixed
+    if (solution_numbers_removed[y][x][0] != 0)
+    {
+        printf("You cannot edit this cell.\n");
+    }
+    // Check if the number matches complete solution
+    else if (solution[y][x][0] != number)
+    {
+        printf("Invalid choice.\n");
+    }
+    // Valid, place number in board
+    else
+    {
+        board[y][x][0] = number;
+        printf("Placed move at %d,%d %d;\n", x, y, number);
+        display_game(board);
+    }
+}
+
+void bot_level()
+{
+
 }
