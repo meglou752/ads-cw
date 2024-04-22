@@ -134,7 +134,7 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
             }
             else if (j == 8)
             {
-                printf("%2d ", board[i][j]);
+                printf("%2d ", board[i][j][0]);
                 printf(" ║ ");
                 if(i == 0)
                 {
@@ -158,7 +158,7 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
                 }
             }
             if(j != 8) {
-                printf("%2d ", board[i][j]);
+                printf("%2d ", board[i][j][0]);
             }
         }
         printf("\n");
@@ -181,11 +181,11 @@ void progress()
     {
         for (int j = 0; j < COLUMN; j++)
         {
-            if (solution_numbers_removed[i][j] == 0)
+            if (solution_numbers_removed[i][j][0] == 0)
             {
                 initial++;
             }
-            if (solution_playable[i][j] == 0)
+            if (solution_playable[i][j][0] == 0)
             {
                 changed++;
             }
@@ -332,7 +332,7 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
     {
         for (int j = 0; j < COLUMN; j++)
         {
-            if (board[i][j] == 0)
+            if (board[i][j][0] == 0)
             {
                 return 0;
             }
@@ -393,7 +393,7 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
             }
             else if (j == 8)
             {
-                printf("%2d ", board[i][j]);
+                printf("%2d ", board[i][j][0]);
                 printf(" ║");
                 if(i == 0)
                 {
@@ -417,7 +417,7 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 }
             }
             if(j != 8) {
-                printf("%2d ", board[i][j]);
+                printf("%2d ", board[i][j][0]);
             }
         }
 
@@ -431,11 +431,11 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 } else if (j == 0) {
                     printf("    ║ ");
                 } else if (j == 8) {
-                    printf("%2d ", bot_board[i][j]);
+                    printf("%2d ", bot_board[i][j][0]);
                     printf(" ║ ");
                 }
                 if (j != 8) {
-                    printf("%2d ", bot_board[i][j]);
+                    printf("%2d ", bot_board[i][j][0]);
                 }
             }
         }
@@ -448,11 +448,11 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 } else if (j == 0) {
                     printf("    ║ ");
                 } else if (j == 8) {
-                    printf("%2d ", bot_board[i][j]);
+                    printf("%2d ", bot_board[i][j][0]);
                     printf(" ║ ");
                 }
                 if (j != 8) {
-                    printf("%2d ", bot_board[i][j]);
+                    printf("%2d ", bot_board[i][j][0]);
                 }
             }
         }
@@ -465,11 +465,11 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 } else if (j == 0) {
                     printf("    ║ ");
                 } else if (j == 8) {
-                    printf("%2d ", bot_board[i][j]);
+                    printf("%2d ", bot_board[i][j][0]);
                     printf(" ║ ");
                 }
                 if (j != 8) {
-                    printf("%2d ", bot_board[i][j]);
+                    printf("%2d ", bot_board[i][j][0]);
                 }
             }
         }
@@ -482,11 +482,11 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 } else if (j == 0) {
                     printf("    ║ ");
                 } else if (j == 8) {
-                    printf("%2d ", bot_board[i][j]);
+                    printf("%2d ", bot_board[i][j][0]);
                     printf(" ║ ");
                 }
                 if (j != 8) {
-                    printf("%2d ", bot_board[i][j]);
+                    printf("%2d ", bot_board[i][j][0]);
                 }
             }
         }
@@ -499,11 +499,11 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 } else if (j == 0) {
                     printf("    ║ ");
                 } else if (j == 8) {
-                    printf("%2d ", bot_board[i][j]);
+                    printf("%2d ", bot_board[i][j][0]);
                     printf(" ║ ");
                 }
                 if (j != 8) {
-                    printf("%2d ", bot_board[i][j]);
+                    printf("%2d ", bot_board[i][j][0]);
                 }
             }
         }

@@ -146,7 +146,7 @@ void duplicate_board(int input[ROW][COLUMN][PENCILMARKS], int output[ROW][COLUMN
  * @param board 3D array representing the board to be edited
  * @param num_to_remove Numbers to be removed from the grid, depends on difficulty level
  */
-void remove_numbers(int board[ROW][COLUMN], int num_to_remove)
+void remove_numbers(int board[ROW][COLUMN][PENCILMARKS], int num_to_remove)
 {
     // Declare and initialise array with nums 1-81
     int nums_to_remove[ROW*COLUMN];
@@ -161,7 +161,7 @@ void remove_numbers(int board[ROW][COLUMN], int num_to_remove)
     {
         int x = (nums_to_remove[j] - 1) / ROW; // Calculate x coordinate
         int y = (nums_to_remove[j] - 1) % COLUMN; // Calculate y coordinate
-        board[x][y] = 0; // Set to 0 on the board
+        board[x][y][0] = 0; // Set to 0 on the board
     }
     //printf("Removing numbers...\n");
     //sleep(1);

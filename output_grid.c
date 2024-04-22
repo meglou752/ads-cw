@@ -64,10 +64,10 @@ void generate_unique_solution(const int num_to_remove) {
  * @param number Value to be placed
  * @param difficulty_level Level of difficulty; will affect prints
  */
-void place_move(int board[ROW][COLUMN]{PENCILMARKS}, int x,int y, int number, int difficulty_level)
+void place_move(int board[ROW][COLUMN][PENCILMARKS], int x,int y, int number, int difficulty_level)
 {
     // Check if the cell is fixed
-    if (solution_numbers_removed[y][x] != 0)
+    if (solution_numbers_removed[y][x][0] != 0)
     {
         printf("You cannot edit this cell.\n");
     }
@@ -79,7 +79,7 @@ void place_move(int board[ROW][COLUMN]{PENCILMARKS}, int x,int y, int number, in
     // Valid, place number in board
     else
     {
-        board[y][x] = number;
+        board[y][x][0] = number;
         display_based_on_difficulty();
         Move move = {x, y, number};
         push(&moves_top, moves, move);
@@ -97,12 +97,12 @@ void place_move(int board[ROW][COLUMN]{PENCILMARKS}, int x,int y, int number, in
  */
 void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y)
 {
-    if(board[y][x] == 0)
+    if(board[y][x][0] == 0)
     {
-        board[y][x] = solution[y][x][0];
+        board[y][x][0] = solution[y][x][0];
         display_based_on_difficulty();
         // Add to move history stack
-        Move move = {x, y, board[x][y]};
+        Move move = {x, y, board[x][y][0]};
         push(&moves_top, moves, move);
     }
     else
@@ -119,15 +119,15 @@ void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y)
  */
 void delete_move(int board[ROW][COLUMN][PENCILMARKS], int x, int y)
 {
-    if(solution_numbers_removed[y][x] != 0)
+    if(solution_numbers_removed[y][x][0] != 0)
     {
         printf("You cannot edit this cell.\n");
     }
     else
     {
-        board[y][x] = 0;
+        board[y][x][0] = 0;
         display_based_on_difficulty();
-        Move move = {x, y, board[x][y]};
+        Move move = {x, y, board[x][y][0]};
         push(&moves_top, moves, move);
     }
 }
@@ -188,14 +188,14 @@ void undo(int board[ROW][COLUMN][PENCILMARKS])
     push(&redo_top, redo_stack, topMove);
     // Update the board with the values from the top move
     // If the move is not a deletion, set the value to 0
-    if(board[topMove.y][topMove.x] != 0) {
-        board[topMove.y][topMove.x] = 0; // Set the cell value to 0
+    if(board[topMove.y][topMove.x][0] != 0) {
+        board[topMove.y][topMove.x][0] = 0; // Set the cell value to 0
         display_based_on_difficulty();
     }
     // If deletion, add the value back from the solution
     else
     {
-        board[topMove.y][topMove.x] = solution[topMove.y][topMove.x][0];
+        board[topMove.y][topMove.x][0] = solution[topMove.y][topMove.x][0];
         display_game(board); // Display the updated board
         if(difficulty_level == 50)
         {
@@ -226,14 +226,14 @@ void redo(int board[ROW][COLUMN][PENCILMARKS])
     Move topMove = redo_stack[redo_top];
 
     // If normal move, add back to the board by value
-    if(board[topMove.y][topMove.x] == 0) {
-        board[topMove.y][topMove.x] = topMove.number; // Set the cell value to 0
+    if(board[topMove.y][topMove.x][0] == 0) {
+        board[topMove.y][topMove.x][0] = topMove.number; // Set the cell value to 0
         display_based_on_difficulty();
     }
     // If deletion, add the value back from the solution (inaccessible by struct here)
     else
     {
-        board[topMove.y][topMove.x] = 0;
+        board[topMove.y][topMove.x][0] = 0;
         display_based_on_difficulty();
     }
 
