@@ -107,7 +107,7 @@ int difficulty() {
 /**
  * Basic display function for easy and medium difficulty
  */
-void display_game(int board[ROW][COLUMN])
+void display_game(int board[ROW][COLUMN][PENCILMARKS])
 {
     printf("\n  ◦ 0   1   2 ◦ 3   4   5 ◦ 6   7   8 ◦\n");
     printf("◦ ╔═══════════╤═══════════╤═══════════╗");
@@ -242,7 +242,7 @@ void new_game(int difficulty_level)
  * @param board Playable board
  * @param difficulty_level
  */
-void handle_input(int board[ROW][COLUMN], int difficulty_level)
+void handle_input(int board[ROW][COLUMN][PENCILMARKS], int difficulty_level)
 {
     int x, y, number;
     char input;
@@ -326,7 +326,7 @@ void clear_input_buffer() {
  * @param board Playable board
  * @return 0 for incomplete; 1 for complete
  */
-int game_complete(int board[ROW][COLUMN])
+int game_complete(int board[ROW][COLUMN][PENCILMARKS])
 {
     for(int i = 0; i < ROW; i++)
     {
@@ -366,7 +366,7 @@ int game_complete(int board[ROW][COLUMN])
  * @param board Playable board
  * @param bot_board  Bot, non-playable board
  */
-void display_game_hard_difficulty(int board[ROW][COLUMN], int bot_board[ROW][COLUMN])
+void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_board[ROW][COLUMN][PENCILMARKS])
 {
     printf("\n  ◦ 0   1   2 ◦ 3   4   5 ◦ 6   7   8 ◦\t\t\t\t\t\t\t\t\t\t\t   BOT GRID");
     printf("\n◦ ╔═══════════╤═══════════╤═══════════╗\t\t\t\t\t\t\t\t╔═══════════╤═══════════╤═══════════╗");

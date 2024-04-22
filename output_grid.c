@@ -1,9 +1,9 @@
 #include "sudoku.h"
 int solution[ROW][COLUMN][PENCILMARKS] = {{{0}}};
-int solution_playable[ROW][COLUMN] = {{0}};
-int solution_numbers_removed[ROW][COLUMN] = {{0}};
+int solution_playable[ROW][COLUMN][PENCILMARKS] = {{{0}}};
+int solution_numbers_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int bot_solution[ROW][COLUMN][PENCILMARKS] = {{{0}}};
-int bot_solution_nums_removed[ROW][COLUMN] = {{0}};
+int bot_solution_nums_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_forward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_backward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int moves_top = -1,redo_top = -1, undo_stack[MAX_SIZE];
@@ -25,7 +25,7 @@ int check_uniqueness()
             }
         }
     }
-    dup(solution_numbers_removed,solution_playable);
+    duplicate_board(solution_numbers_removed,solution_playable);
     return 1;
 }
 
@@ -64,7 +64,7 @@ void generate_unique_solution(const int num_to_remove) {
  * @param number Value to be placed
  * @param difficulty_level Level of difficulty; will affect prints
  */
-void place_move(int board[ROW][COLUMN], int x,int y, int number, int difficulty_level)
+void place_move(int board[ROW][COLUMN]{PENCILMARKS}, int x,int y, int number, int difficulty_level)
 {
     // Check if the cell is fixed
     if (solution_numbers_removed[y][x] != 0)
@@ -95,7 +95,7 @@ void place_move(int board[ROW][COLUMN], int x,int y, int number, int difficulty_
  * @param x X coordinate
  * @param y Y coordinate
  */
-void reveal_hint(int board[ROW][COLUMN],int x, int y)
+void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y)
 {
     if(board[y][x] == 0)
     {
@@ -117,7 +117,7 @@ void reveal_hint(int board[ROW][COLUMN],int x, int y)
  * @param x X coordinate
  * @param y Y coordinate
  */
-void delete_move(int board[ROW][COLUMN], int x, int y)
+void delete_move(int board[ROW][COLUMN][PENCILMARKS], int x, int y)
 {
     if(solution_numbers_removed[y][x] != 0)
     {
@@ -174,7 +174,7 @@ void pop(int *top, Move stack[])
  * Undo move from the board and add to redo stack
  * @param board Board to be edited
  */
-void undo(int board[ROW][COLUMN])
+void undo(int board[ROW][COLUMN][PENCILMARKS])
 {
     // Check if there are any moves to undo
     if (moves_top == -1)
@@ -213,7 +213,7 @@ void undo(int board[ROW][COLUMN])
  * Add last undone move to the board
  * @param board Board to be edited
  */
-void redo(int board[ROW][COLUMN])
+void redo(int board[ROW][COLUMN][PENCILMARKS])
 {
     // Check if there are any moves to redo
     if (redo_top == -1)

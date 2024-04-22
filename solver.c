@@ -132,7 +132,7 @@ int reverse_backtracking(int board[ROW][COLUMN][PENCILMARKS], int row, int colum
  * @param input Board to copy
  * @param output Board copied to
  */
-void duplicate_board(int input[ROW][COLUMN][PENCILMARKS], int output[ROW][COLUMN])
+void duplicate_board(int input[ROW][COLUMN][PENCILMARKS], int output[ROW][COLUMN][PENCILMARKS])
 {
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COLUMN; j++) {
