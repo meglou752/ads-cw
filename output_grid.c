@@ -6,9 +6,12 @@ int bot_solution[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int bot_solution_nums_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_forward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_backward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
+int bot_nums_removed[HARD];
 int moves_top = -1,redo_top = -1, undo_stack[MAX_SIZE];
 Move moves[MAX_SIZE];
 Move redo_stack[MAX_SIZE];
+int player_move_counter;
+
 /**
  * Check that the solution with numbers removed only has one solution
  * @return Unsuccessful/Successful
@@ -104,6 +107,7 @@ void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y)
         // Add to move history stack
         Move move = {x, y, board[x][y][0]};
         push(&moves_top, moves, move);
+        clear_redo_stack(&redo_top, redo_stack);
     }
     else
     {
@@ -263,7 +267,8 @@ void generate_bot_solution()
     seed_random_units(bot_solution);
     backtracking(bot_solution,0,0);
     duplicate_board(bot_solution,bot_solution_nums_removed);
-    remove_numbers(bot_solution_nums_removed, 50);
+    remove_numbers(bot_solution_nums_removed, HARD);
+    bot_output_random();
 }
 
 /**
@@ -278,5 +283,30 @@ void display_based_on_difficulty()
     else
     {
         display_game(solution_playable);
+    }
+}
+
+
+/**
+ * Loop through the array of numbers removed from the 'bot' solution, to randomly output a value to a coordinate
+ */
+#include <unistd.h> // for sleep
+
+// Function definition
+void bot_output_random() {
+    while (!game_complete(bot_solution_nums_removed) && !(game_complete(solution_playable))  && player_move_counter >= 1) {
+        //int time_delay = rand() % 11 + 20;
+        //sleep(time_delay); // Non-blocking delay
+
+        for (int i = 0; i < HARD; i++) {
+            if (bot_nums_removed[i] != 0) {
+                int x = (bot_nums_removed[i] - 1) / ROW;
+                int y = (bot_nums_removed[i] - 1) % COLUMN;
+                bot_solution_nums_removed[y][x][0] = bot_solution[y][x][0];
+                display_based_on_difficulty();
+                bot_nums_removed[i] = 0;
+                break;
+            }
+        }
     }
 }

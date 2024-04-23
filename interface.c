@@ -6,7 +6,7 @@
  */
 char difficulty_setting;
 int difficulty_level;
-
+int player_move_counter;
 /**
  * Entry point
  */
@@ -222,6 +222,14 @@ void new_game(int difficulty_level)
         if(difficulty_level == HARD)
         {
             generate_bot_solution();
+
+            printf("Bot nums removed: ");
+
+            for(int i = 0; i < HARD; i++)
+            {
+                printf("%d,", bot_nums_removed[i]);
+            }
+            bot_output_random();
             display_game_hard_difficulty(solution_playable, bot_solution_nums_removed);
         }
         else
@@ -269,6 +277,7 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS], int difficulty_level)
             if (scanf("%d,%d %d", &x, &y, &number) == 3) {
                 // Logic to place a move
                 place_move(board, x, y, number, difficulty_level);
+                player_move_counter++;
             } else {
                 printf("Invalid input\n");
                 clear_input_buffer();
@@ -279,6 +288,7 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS], int difficulty_level)
             if (scanf("%d,%d", &x,&y) == 2)
             {
                 reveal_hint(board,x,y);
+                player_move_counter++;
             }
             else
             {
@@ -339,20 +349,23 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
         }
     }
     // Game complete
-    char save;
-    printf("\nGame complete! Would you like to save the game? (Y/N)\n");
-    scanf(" %c", &save);
-    clear_input_buffer();
-    save = toupper((unsigned char)save);
-    if(save == 'Y')
+    if(difficulty_setting == 'H')
     {
-        save_game();
+        return 1;
     }
-    else
-    {
-        home();
+    else {
+        char save;
+        printf("\nGame complete! Would you like to save the game? (Y/N)\n");
+        scanf(" %c", &save);
+        clear_input_buffer();
+        save = toupper((unsigned char) save);
+        if (save == 'Y') {
+            save_game();
+        } else {
+            home();
+        }
+        return 1;
     }
-    return 1;
 }
 
 

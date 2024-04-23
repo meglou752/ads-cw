@@ -17,4 +17,5 @@
 #include <stdbool.h>
 #include <time.h>
 
+
 #endif // ADS_SUDOKU_H

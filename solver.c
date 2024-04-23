@@ -7,6 +7,7 @@
 void initialise_board(int num_to_remove) {
 
 }*/
+int bot_nums_removed[HARD];
 
 
 /**
@@ -161,8 +162,27 @@ void remove_numbers(int board[ROW][COLUMN][PENCILMARKS], int num_to_remove)
     {
         int x = (nums_to_remove[j] - 1) / ROW; // Calculate x coordinate
         int y = (nums_to_remove[j] - 1) % COLUMN; // Calculate y coordinate
+        if(board == bot_solution_nums_removed[0])
+        {
+            for (int num = 0; num < HARD; num++)
+            {
+                if(bot_nums_removed[num] == 0)
+                {
+                    bot_nums_removed[num] = nums_to_remove[j];
+                    break;
+                }
+            }
+        }
         board[x][y][0] = 0; // Set to 0 on the board
     }
     //printf("Removing numbers...\n");
     //sleep(1);
+}
+
+
+// BOT
+
+void nums_to_output_bot_shuffled()
+{
+    shuffle(bot_nums_removed, HARD);
 }
