@@ -286,17 +286,11 @@ void display_based_on_difficulty()
 }
 
 
+
 /**
  * Loop through the array of numbers removed from the 'bot' solution, to randomly output a value to a coordinate
  */
-#include <unistd.h> // for sleep
-
-// Function definition
 void bot_output_random() {
-    // Iterate through the shuffled array and update the bot grid with the first non-zero value
-    srand(time(NULL));
-    int random_time = random()%11+20;
-    sleep(random_time);
     for (int i = 0; i < HARD; i++) {
         if (bot_nums_removed[i] != 0) {
             int x = (bot_nums_removed[i] - 1) / ROW;

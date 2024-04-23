@@ -7,6 +7,8 @@
 char difficulty_setting;
 int difficulty_level;
 int player_move_counter;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
 /**
  * Entry point
  */
@@ -211,25 +213,33 @@ void progress()
 }
 
 
+void* bot_thread(void* arg) {
+    while (!game_complete(bot_solution_nums_removed)) {
+        // Sleep for a random interval between 20 and 30 seconds
+        int random_time = rand() % 11 + 20;
+        sleep(random_time);
 
+        // Make a bot move
+        pthread_mutex_lock(&mutex);
+        bot_output_random();
+        pthread_mutex_unlock(&mutex);
+    }
+    return NULL;
+}
 /**
  * Logic for new game menu option
  */
 void new_game(int difficulty_level)
 {
-        // If valid choice is received, initialise and display board based on difficulty
+        // Create seperate threads for bot
+        pthread_t bot;
+        pthread_create(&bot, NULL, bot_thread, NULL);
+
+        // If valid choice is received, initialise and display game based on difficulty
         generate_unique_solution(difficulty_level);
         if(difficulty_level == HARD)
         {
             generate_bot_solution();
-
-            printf("Bot nums removed: ");
-
-            for(int i = 0; i < HARD; i++)
-            {
-                printf("%d,", bot_nums_removed[i]);
-            }
-            //bot_output_random();
             display_game_hard_difficulty(solution_playable, bot_solution_nums_removed);
         }
         else
@@ -238,20 +248,15 @@ void new_game(int difficulty_level)
 
         }
 
-        // Game is in play until game_complete()
-        /*
+    if(difficulty_level == HARD)
+    {
         while(!game_complete(solution_playable))
         {
             handle_input(solution_playable, difficulty_level);
         }
-        */
-    if(difficulty_level == HARD)
-    {
-        while(!game_complete(solution_playable) || !game_complete(bot_solution_nums_removed))
-        {
-            handle_input(solution_playable, difficulty_level);
-            bot_output_random();
-        }
+        // Enter bot thread
+        pthread_join(bot, NULL);
+
     }
     else
     {
