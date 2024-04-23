@@ -46,8 +46,7 @@ void home()
                 valid = true;
                 break;
             case 'X':
-                valid = true;
-                break;
+                exit(0);
             default:
                 printf("%c is not valid, enter a valid choice: ", input);
                 scanf(" %c", &input);
