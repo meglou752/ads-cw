@@ -1,8 +1,9 @@
 
+#include <pthread/pthread.h>
 #include "sudoku.h"
 #define EASY 30
 #define MEDIUM 40
-#define HARD 50
+#define HARD 3
 extern int player_move_counter;
 
 int difficulty();
