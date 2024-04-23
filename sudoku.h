@@ -16,6 +16,9 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <time.h>
+#include <pthread.h> // for threading
+
+
 
 
 #endif // ADS_SUDOKU_H

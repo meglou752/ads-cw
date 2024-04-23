@@ -229,7 +229,7 @@ void new_game(int difficulty_level)
             {
                 printf("%d,", bot_nums_removed[i]);
             }
-            bot_output_random();
+            //bot_output_random();
             display_game_hard_difficulty(solution_playable, bot_solution_nums_removed);
         }
         else
@@ -239,11 +239,28 @@ void new_game(int difficulty_level)
         }
 
         // Game is in play until game_complete()
+        /*
+        while(!game_complete(solution_playable))
+        {
+            handle_input(solution_playable, difficulty_level);
+        }
+        */
+    if(difficulty_level == HARD)
+    {
+        while(!game_complete(solution_playable) || !game_complete(bot_solution_nums_removed))
+        {
+            handle_input(solution_playable, difficulty_level);
+            bot_output_random();
+        }
+    }
+    else
+    {
         while(!game_complete(solution_playable))
         {
             handle_input(solution_playable, difficulty_level);
         }
     }
+}
 
 /**
  * Gameplay input handling
@@ -259,7 +276,8 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS], int difficulty_level)
     clear_input_buffer();
     input = toupper((unsigned char)input);
 
-    switch (input) {
+
+        switch (input) {
         case 'S':
             // Logic to save and exit
             save_game();
@@ -526,3 +544,4 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
     printf("◦ ╚═══════════╧═══════════╧═══════════╝\t\t\t\t\t\t\t\t╚═══════════╧═══════════╧═══════════╝\n");
     progress();
 }
+

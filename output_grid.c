@@ -268,7 +268,6 @@ void generate_bot_solution()
     backtracking(bot_solution,0,0);
     duplicate_board(bot_solution,bot_solution_nums_removed);
     remove_numbers(bot_solution_nums_removed, HARD);
-    bot_output_random();
 }
 
 /**
@@ -276,7 +275,7 @@ void generate_bot_solution()
  */
 void display_based_on_difficulty()
 {
-    if(difficulty_level == 50)
+    if(difficulty_level == HARD)
     {
         display_game_hard_difficulty(solution_playable,bot_solution_nums_removed);
     }
@@ -294,19 +293,19 @@ void display_based_on_difficulty()
 
 // Function definition
 void bot_output_random() {
-    while (!game_complete(bot_solution_nums_removed) && !(game_complete(solution_playable))  && player_move_counter >= 1) {
-        //int time_delay = rand() % 11 + 20;
-        //sleep(time_delay); // Non-blocking delay
-
-        for (int i = 0; i < HARD; i++) {
-            if (bot_nums_removed[i] != 0) {
-                int x = (bot_nums_removed[i] - 1) / ROW;
-                int y = (bot_nums_removed[i] - 1) % COLUMN;
-                bot_solution_nums_removed[y][x][0] = bot_solution[y][x][0];
-                display_based_on_difficulty();
-                bot_nums_removed[i] = 0;
-                break;
-            }
+    // Iterate through the shuffled array and update the bot grid with the first non-zero value
+    srand(time(NULL));
+    int random_time = random()%11+20;
+    sleep(random_time);
+    for (int i = 0; i < HARD; i++) {
+        if (bot_nums_removed[i] != 0) {
+            int x = (bot_nums_removed[i] - 1) / ROW;
+            int y = (bot_nums_removed[i] - 1) % COLUMN;
+            printf("X,Y, VALUE added: %d,%d,%d\n", x,y,bot_solution[y][x][0]);
+            bot_solution_nums_removed[y][x][0] = bot_solution[y][x][0];
+            display_based_on_difficulty();
+            bot_nums_removed[i] = 0; // Mark the value as used
+            break;
         }
     }
 }
