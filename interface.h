@@ -16,3 +16,4 @@ void home();
 void progress();
 void handle_input(int board[ROW][COLUMN][PENCILMARKS], int difficulty_level);
 int game_complete(int board[ROW][COLUMN][PENCILMARKS]);
+void* bot_thread(void* arg);

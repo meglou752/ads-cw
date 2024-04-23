@@ -212,60 +212,61 @@ void progress()
     printf("\n");
 }
 
-
-void* bot_thread(void* arg) {
-    while (!game_complete(bot_solution_nums_removed)) {
-        // Sleep for a random interval between 20 and 30 seconds
-        int random_time = rand() % 11 + 20;
-        sleep(random_time);
-
-        // Make a bot move
-        pthread_mutex_lock(&mutex);
-        bot_output_random();
-        pthread_mutex_unlock(&mutex);
-    }
-    return NULL;
-}
 /**
  * Logic for new game menu option
  */
-void new_game(int difficulty_level)
-{
-        // Create seperate threads for bot
-        pthread_t bot;
-        pthread_create(&bot, NULL, bot_thread, NULL);
+void new_game(int difficulty_level) {
+    // Create separate threads for the bot
+    pthread_t bot;
+    pthread_create(&bot, NULL, bot_thread, NULL);
 
-        // If valid choice is received, initialise and display game based on difficulty
-        generate_unique_solution(difficulty_level);
-        if(difficulty_level == HARD)
-        {
-            generate_bot_solution();
-            display_game_hard_difficulty(solution_playable, bot_solution_nums_removed);
-        }
-        else
-        {
-            display_game(solution_playable);
+    // If valid choice is received, initialize and display the game based on difficulty
+    generate_unique_solution(difficulty_level);
+    if (difficulty_level == HARD) {
+        generate_bot_solution();
+        display_game_hard_difficulty(solution_playable, bot_solution_nums_removed);
+    } else {
+        display_game(solution_playable);
+    }
 
-        }
-
-    if(difficulty_level == HARD)
-    {
-        while(!game_complete(solution_playable))
-        {
+    if (difficulty_level == HARD) {
+        while (!game_complete(solution_playable) && !game_complete(bot_solution_nums_removed)) {
             handle_input(solution_playable, difficulty_level);
         }
         // Enter bot thread
         pthread_join(bot, NULL);
 
-    }
-    else
-    {
-        while(!game_complete(solution_playable))
-        {
+        // Check if player or bot won
+        if (game_complete(solution_playable)) {
+            char save;
+            printf("\nYou win against the bot! Would you like to save the game? (Y/N)\n");
+            scanf(" %c", &save);
+            clear_input_buffer();
+            save = toupper((unsigned char) save);
+            if (save == 'Y') {
+                save_game();
+            } else {
+                home();
+            }
+        } else {
+            char save;
+            printf("\nThe bot won:( Would you like to save the game? (Y/N)\n");
+            scanf(" %c", &save);
+            clear_input_buffer();
+            save = toupper((unsigned char) save);
+            if (save == 'Y') {
+                save_game();
+            } else {
+                home();
+            }
+        }
+    } else {
+        while (!game_complete(solution_playable)) {
             handle_input(solution_playable, difficulty_level);
         }
     }
 }
+
 
 /**
  * Gameplay input handling
@@ -359,38 +360,21 @@ void clear_input_buffer() {
  * @param board Playable board
  * @return 0 for incomplete; 1 for complete
  */
-int game_complete(int board[ROW][COLUMN][PENCILMARKS])
-{
-    for(int i = 0; i < ROW; i++)
-    {
-        for (int j = 0; j < COLUMN; j++)
-        {
-            if (board[i][j][0] == 0)
-            {
-                return 0;
+int game_complete(int board[ROW][COLUMN][PENCILMARKS]) {
+    int complete = 1;
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COLUMN; j++) {
+            if (board[i][j][0] == 0) {
+                complete = 0;
+                break;
             }
         }
+        if (!complete) break;
     }
-    // Game complete
-    if(difficulty_setting == 'H')
-    {
-        // Needs implementation
-        return 1;
-    }
-    else {
-        char save;
-        printf("\nGame complete! Would you like to save the game? (Y/N)\n");
-        scanf(" %c", &save);
-        clear_input_buffer();
-        save = toupper((unsigned char) save);
-        if (save == 'Y') {
-            save_game();
-        } else {
-            home();
-        }
-        return 1;
-    }
+
+    return complete;
 }
+
 
 
 
@@ -551,3 +535,17 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
     progress();
 }
 
+
+void* bot_thread(void* arg) {
+    while (!game_complete(bot_solution_nums_removed)) {
+        // Sleep for a random interval between 20 and 30 seconds
+        int random_time = rand() % 1 + 1;
+        sleep(random_time);
+
+        // Make a bot move
+        pthread_mutex_lock(&mutex);
+        bot_output_random();
+        pthread_mutex_unlock(&mutex);
+    }
+    return NULL;
+}

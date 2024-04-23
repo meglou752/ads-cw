@@ -295,8 +295,8 @@ void bot_output_random() {
         if (bot_nums_removed[i] != 0) {
             int x = (bot_nums_removed[i] - 1) / ROW;
             int y = (bot_nums_removed[i] - 1) % COLUMN;
-            printf("X,Y, VALUE added: %d,%d,%d\n", x,y,bot_solution[y][x][0]);
-            bot_solution_nums_removed[y][x][0] = bot_solution[y][x][0];
+            printf("\nBOT Played %d,%d: %d\n", y,x,bot_solution[x][y][0]);
+            bot_solution_nums_removed[x][y][0] = bot_solution[x][y][0];
             display_based_on_difficulty();
             bot_nums_removed[i] = 0; // Mark the value as used
             break;
