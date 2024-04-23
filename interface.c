@@ -374,6 +374,7 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
     // Game complete
     if(difficulty_setting == 'H')
     {
+        // Needs implementation
         return 1;
     }
     else {

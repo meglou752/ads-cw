@@ -162,7 +162,7 @@ void remove_numbers(int board[ROW][COLUMN][PENCILMARKS], int num_to_remove)
     {
         int x = (nums_to_remove[j] - 1) / ROW; // Calculate x coordinate
         int y = (nums_to_remove[j] - 1) % COLUMN; // Calculate y coordinate
-        if(board == &bot_solution_nums_removed)
+        if(board == *bot_solution_nums_removed)
         {
             for (int num = 0; num < HARD; num++)
             {
