@@ -9,6 +9,7 @@ int player_move_counter;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int pthread_cancel(pthread_t bot);
 pthread_t bot;
+char file_name[1024];
 
 /**
  * Entry point
@@ -23,7 +24,7 @@ void interface()
  */
 void home()
 {
-    printf("\t   ******SUDOKU GAME******\n");
+    printf("\n\t   ******SUDOKU GAME******\n");
     printf("\t        Pick an option: \n");
     printf("\t    A to start a new game\n");
     printf("\t   B to continue an old game\n");
@@ -158,6 +159,10 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
                 {
                     printf("To save and exit: S ");
                 }
+                else if(i == 5)
+                {
+                    printf("To go home: X ");
+                }
             }
             if(j != 8) {
                 printf("%2d ", board[i][j][0]);
@@ -208,7 +213,6 @@ void progress()
     {
         printf("*");
     }
-    progress_percentage_w = progress_percentage;
     printf("%d%%", progress_percentage);
     printf("\n");
 }
@@ -310,6 +314,9 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
                 clear_input_buffer();
             }
             break;
+        case 'X':
+            pthread_cancel(bot);
+            home();
         default:
             printf("Enter valid input.\n");
             break;
@@ -317,21 +324,97 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
 }
 
 /**
- * Logic for restart game option
- * Needs implementation
+ * Prompt user to enter filename and validate it
+ * @param file_path Buffer to store the file path
+ * @param current_dir Current directory path
+ * @return 1 if filename is valid, 0 otherwise
  */
-void restart_game()
-{
-    // Load saved games
-    // Option to delete , or replay through the game? if game progress/bot progress == 100%, allow to cycle through moves?
-    // OR only allow games to save if they are incomplete
-    // Scan user input here, if bringing back into play based on id, call load game (output_grid.c) to set board and stack states
-                //Store difficulty and display based on this
-                //Call handle input to deal with it from there
-    // If deleting , rm file and reload interface
-    // so, calling file_handling here (bar save; called in gameplay)
+int enter_filename(char *file_path, const char *current_dir) {
+    printf("Enter file name: ");
+    scanf("%s", file_name);
+    clear_input_buffer();
+
+    // Check if the file exists
+    snprintf(file_path, 1024, "%s/player_saves/%s", current_dir, file_name);
+    if (access(file_path, F_OK) == 0) {
+        return 1; // Valid filename
+    } else {
+        return 0; // Invalid filename
+    }
 }
 
+/**
+ * Logic for restart game option interface
+ */
+int restart_game()
+{
+    // Restart gameplay
+    printf("\nSaved games:\n");
+    // Load saved games
+    const char *dir_path = "player_saves";
+    char file_path[1024];
+    // Get the current working directory
+    char current_dir[1024];
+    if (getcwd(current_dir, sizeof(current_dir)) == NULL) {
+        perror("getcwd");
+    }
+    // Open the directory
+    DIR *dir = opendir(dir_path);
+    if (dir == NULL) {
+        perror("opendir");
+        return 1;
+    }
+
+    // Read directory entries
+    struct dirent *entry;
+    while ((entry = readdir(dir)) != NULL) {
+        // Ignore "." and ".." directories
+        if (entry->d_type == DT_DIR && (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0))
+            continue;
+        // Print file name
+        printf("%s\n", entry->d_name);
+    }
+
+    // Handle input for loading/deleting an old game
+    printf("\nDo you want to restart gameplay (R) or delete a game (D)?\n");
+    printf("INPUT: ");
+    char choice;
+    scanf("%c", &choice);
+    choice = toupper((unsigned char) choice);
+    clear_input_buffer();
+    bool valid = false;
+    while (!valid) {
+        switch (choice) {
+            case 'R':
+                while (!enter_filename(file_path, current_dir)) {
+                    printf("Invalid filename. Please enter a valid filename.\n");
+                }
+                load_game();  // Call to file_handling
+                valid = true;
+                break;
+            case 'D':
+                while (!enter_filename(file_path, current_dir)) {
+                    printf("Invalid filename. Please enter a valid filename.\n");
+                }
+                // Create tmp variable to store filename and append. Bug fix
+                char tmp[20];
+                strcpy(tmp, "/"); // Copy the forward slash to tmp
+                strcat(tmp, file_name);
+                delete_saves(tmp);
+                home(); // Navigate home after deleting file
+                valid = true;
+                break;
+            default:
+                printf("Invalid choice. Please enter R or D: ");
+                scanf("%c", &choice);
+                clear_input_buffer();
+                break;
+        }
+    }
+    // Close the directory
+    closedir(dir);
+    return 0;
+}
 
 
 /**
@@ -478,6 +561,10 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 {
                     printf("To save and exit: S ");
                 }
+                else if(i == 5)
+                {
+                    printf("To go home: X ");
+                }
             }
             if(j != 8) {
                 printf("%2d ", board[i][j][0]);
@@ -553,6 +640,24 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
                 }
             }
         }
+        else if (i == 5)
+        {
+            printf("\t\t\t");
+
+            for (int j = 0; j < COLUMN; j++) {
+                if (j % 3 == 0 && j != 0) {
+                    printf(" │ "); // Print vertical divider after every 3 columns within a row
+                } else if (j == 0) {
+                    printf("    ║ ");
+                } else if (j == 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                    printf(" ║ ");
+                }
+                if (j != 8) {
+                    printf("%2d ", bot_board[i][j][0]);
+                }
+            }
+        }
         else
         {
             printf("\t\t\t\t\t\t\t");
@@ -577,8 +682,11 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
     progress();
 }
 
-
-void* bot_thread(void* arg) {
+/**
+ * Runs continuously until the game is complete/saved, upon entry, making bot moves at random intervals.
+ * @return NULL when the thread closes
+ */
+void* bot_thread() {
     while (!game_complete(bot_solution_nums_removed)) {
         // Sleep for a random interval between 20 and 30 seconds
         int random_time = rand() % 11 + 20;

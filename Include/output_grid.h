@@ -1,6 +1,6 @@
 #include "sudoku.h"
 #define MAX_SIZE 100
-//void remove_numbers(int num_to_remove);
+
 typedef struct {
     int x;
     int y;
@@ -21,6 +21,6 @@ void clear_redo_stack(int *top, Move stack[]);
 void display_based_on_difficulty();
 void bot_output_random();
 
-extern int moves_top,redo_top, progress_percentage_w;
+extern int moves_top,redo_top;
 extern Move moves[MAX_SIZE];
 extern Move redo_stack[MAX_SIZE];

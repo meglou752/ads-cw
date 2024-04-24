@@ -7,7 +7,7 @@ int bot_solution_nums_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_forward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_backward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int bot_nums_removed[HARD];
-int moves_top = -1,redo_top = -1, progress_percentage_w;
+int moves_top = -1,redo_top = -1;
 Move moves[MAX_SIZE];
 Move redo_stack[MAX_SIZE];
 int player_move_counter;
@@ -206,7 +206,6 @@ void undo(int board[ROW][COLUMN][PENCILMARKS])
             display_game_hard_difficulty(solution_playable,bot_solution_nums_removed);
         }
     }
-   // push(&redo_top, redo_stack, topMove);
     // Pop the top move from the stack
     pop(&moves_top, moves);
 }
