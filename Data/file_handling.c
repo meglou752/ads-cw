@@ -33,15 +33,15 @@ void save_stack(Move stack[MAX_SIZE], int top, FILE *file, const char *stack_nam
 //Check game id,name already exists in sub-dir; if yes, overwrite file data, if no, create new file new
 
 
-// Save Game
+/**
+ * Save game content based on difficulty to a test file;
+ */
 void save_game() {
 
     // Save relevant objects depending on difficulty
     FILE *file;
     char file_name[1024];
     char files_dir[1024];
-    printf("Enter file name to save: ");
-    scanf("%s", file_name);
 
     // Get the current working directory
     char current_dir[1024];
@@ -49,6 +49,17 @@ void save_game() {
         perror("getcwd");
         return;
     }
+
+    do {
+        printf("Enter file name to save: ");
+        scanf("%s", file_name);
+
+        // Check if the file already exists
+        snprintf(files_dir, sizeof(files_dir), "%s/%s/%s", current_dir, "player_saves", file_name);
+        if (access(files_dir, F_OK) == 0) {
+            printf("File '%s' already exists. Please choose a different name.\n", file_name);
+        }
+    } while (access(files_dir, F_OK) == 0);
 
     // Construct the path to the 'player_saves' subdirectory
     snprintf(files_dir, sizeof(files_dir), "%s/%s", current_dir, "player_saves");
@@ -73,17 +84,20 @@ void save_game() {
     }
 
     // Saving 3D arrays
-    save_3d_array(solution, file, "S");
-    save_3d_array(solution_numbers_removed, file, "SNR");
-    save_3d_array(solution_playable, file, "SP");
+    save_3d_array(solution, file, "SOLUTION");
+    save_3d_array(solution_numbers_removed, file, "SOLUTION_NUMS_REMOVED");
+    save_3d_array(solution_playable, file, "SOLUTION_PLAYABLE");
     if(difficulty_level == HARD)
     {
-        save_3d_array(bot_solution, file, "BS");
-        save_3d_array(bot_solution_nums_removed,file,"BSNR");
+        save_3d_array(bot_solution, file, "BOT_SOLUTION");
+        save_3d_array(bot_solution_nums_removed,file,"BOT_SOLUTION_NUMS_REMOVED");
     }
-    save_stack(moves, moves_top, file, "MS");
-    save_stack(redo_stack, redo_top, file, "RS");
+    save_stack(moves, moves_top, file, "MOVES_STACK");
+    save_stack(redo_stack, redo_top, file, "REDO_STACK");
 
+    // save progress
+    fprintf(file, "PROGRESS:\n%d\n", progress_percentage_w);
+    fprintf(file, "DIFFICULTY:\n%d\n", difficulty_level);
     fclose(file);
     printf("Game saved successfully!\n\n\n");
     home();
@@ -106,3 +120,9 @@ void check_saves()
     printf("Check saves\n");
 }
 
+void delete_saves()
+{
+    printf("Delete saves\n");
+    //entername
+    //if in dir player_saves, delete
+}

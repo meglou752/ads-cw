@@ -208,6 +208,7 @@ void progress()
     {
         printf("*");
     }
+    progress_percentage_w = progress_percentage;
     printf("%d%%", progress_percentage);
     printf("\n");
 }
@@ -328,7 +329,7 @@ void restart_game()
                 //Store difficulty and display based on this
                 //Call handle input to deal with it from there
     // If deleting , rm file and reload interface
-
+    // so, calling file_handling here (bar save; called in gameplay)
 }
 
 

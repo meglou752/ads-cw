@@ -21,6 +21,6 @@ void clear_redo_stack(int *top, Move stack[]);
 void display_based_on_difficulty();
 void bot_output_random();
 
-extern int moves_top,redo_top, undo_stack[MAX_SIZE];
+extern int moves_top,redo_top, progress_percentage_w;
 extern Move moves[MAX_SIZE];
 extern Move redo_stack[MAX_SIZE];
