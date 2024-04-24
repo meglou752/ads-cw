@@ -17,7 +17,8 @@
 #include <stdbool.h>
 #include <time.h>
 #include <pthread.h> // for threading
-
+#include <sys/stat.h>
+#include <dirent.h>
 
 
 

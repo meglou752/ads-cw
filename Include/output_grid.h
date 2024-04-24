@@ -20,3 +20,7 @@ void delete_move(int board[ROW][COLUMN][PENCILMARKS], int x, int y);
 void clear_redo_stack(int *top, Move stack[]);
 void display_based_on_difficulty();
 void bot_output_random();
+
+extern int moves_top,redo_top, undo_stack[MAX_SIZE];
+extern Move moves[MAX_SIZE];
+extern Move redo_stack[MAX_SIZE];

@@ -1,17 +1,10 @@
 #include "../Include/solver.h"
 
-/**
- * Generate a solution
- */
-/*
-void initialise_board(int num_to_remove) {
-
-}*/
-int bot_nums_removed[HARD];
+//int bot_nums_removed[HARD];
 
 
 /**
- * Check validity of the current number to try in the specified coordinate by row, column, unit and pencilmark state.
+ * Check validity of the current number to try in the specified coordinate by row, column, unit and pencil-mark state.
  * 3D array is utilised for pencilmarking for increased algorithm efficiency.
  * @param row Row coordinate for the current cell
  * @param column Column coordinate for the current cell
@@ -36,8 +29,7 @@ int validity_check(int board[ROW][COLUMN][PENCILMARKS], int row, int column, int
         }
     }
 
-    // Check pencil mark
-    if(board[row][column][num])
+    if(board[row][column][num]) // Check pencil-mark
     {
         return 0;
     }
@@ -60,7 +52,8 @@ void shuffle(int unit[], int size) {
 }
 
 /**
- * Place a randomly shuffled array in each 'unit', on the diagonal, to avoid conflicts and improve randomness of the solution
+ * Place randomly shuffled arrays along the diagonal units of the puzzle
+ * @param board Board to seed units into
  */
 void seed_random_units(int board[ROW][COLUMN][PENCILMARKS]) {
     int unit[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -87,7 +80,8 @@ void seed_random_units(int board[ROW][COLUMN][PENCILMARKS]) {
 }
 
 /**
- * Transverse through the board, trying for valid values for each cell, until a valid solution is found
+ * Transverse through the board, trying for valid values 1-9 for each cell, until a valid solution is found
+ * @param board Board to perform backtracking on
  * @param row Current row
  * @param column Current column
  * @return 1 for solved board; 0 for incomplete/invalid board
@@ -109,6 +103,14 @@ int backtracking(int board[ROW][COLUMN][PENCILMARKS], int row, int column) {
     return 0; // No valid number found for this cell, backtrack
 }
 
+
+/**
+ * Transverse through the board, trying for valid values 9-1 for each cell, until a valid solution is found
+ * @param board Board to perform backtracking on
+ * @param row Current row
+ * @param column Current column
+ * @return 1 for solved board; 0 for incomplete/invalid board
+ */
 int reverse_backtracking(int board[ROW][COLUMN][PENCILMARKS], int row, int column) {
     if (row == ROW) return 1; // Puzzle solved
 
@@ -158,7 +160,7 @@ void remove_numbers(int board[ROW][COLUMN][PENCILMARKS], int num_to_remove)
 
     shuffle(nums_to_remove, ROW*COLUMN); // Shuffle array
 
-    for (int j = 0; j < num_to_remove; j++) // Loop through the amount of nums based on difficulty
+    for (int j = 0; j < num_to_remove; j++) // Loop through the amount of nums based on difficulty, preventing the same number being attempted multiple times
     {
         int x = (nums_to_remove[j] - 1) / ROW; // Calculate x coordinate
         int y = (nums_to_remove[j] - 1) % COLUMN; // Calculate y coordinate
@@ -166,6 +168,7 @@ void remove_numbers(int board[ROW][COLUMN][PENCILMARKS], int num_to_remove)
         {
             for (int num = 0; num < HARD; num++)
             {
+                // Store the numbers being removed, if handling bot grid, to enable random automated output with linear time complexity
                 if(bot_nums_removed[num] == 0)
                 {
                     bot_nums_removed[num] = nums_to_remove[num];
@@ -175,14 +178,4 @@ void remove_numbers(int board[ROW][COLUMN][PENCILMARKS], int num_to_remove)
         }
         board[x][y][0] = 0; // Set to 0 on the board
     }
-    //printf("Removing numbers...\n");
-    //sleep(1);
-}
-
-
-// BOT
-
-void nums_to_output_bot_shuffled()
-{
-    shuffle(bot_nums_removed, HARD);
 }
