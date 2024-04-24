@@ -55,29 +55,29 @@ build CMakeFiles/ADS.dir/main.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganm
   OBJECT_DIR = CMakeFiles/ADS.dir
   OBJECT_FILE_DIR = CMakeFiles/ADS.dir
 
-build CMakeFiles/ADS.dir/interface.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganmcleod/Desktop/Uni/ADS/interface.c || cmake_object_order_depends_target_ADS
-  DEP_FILE = CMakeFiles/ADS.dir/interface.c.o.d
+build CMakeFiles/ADS.dir/Presentation/interface.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganmcleod/Desktop/Uni/ADS/Presentation/interface.c || cmake_object_order_depends_target_ADS
+  DEP_FILE = CMakeFiles/ADS.dir/Presentation/interface.c.o.d
   FLAGS = -g -std=gnu99 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
   OBJECT_DIR = CMakeFiles/ADS.dir
-  OBJECT_FILE_DIR = CMakeFiles/ADS.dir
+  OBJECT_FILE_DIR = CMakeFiles/ADS.dir/Presentation
 
-build CMakeFiles/ADS.dir/solver.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganmcleod/Desktop/Uni/ADS/solver.c || cmake_object_order_depends_target_ADS
-  DEP_FILE = CMakeFiles/ADS.dir/solver.c.o.d
+build CMakeFiles/ADS.dir/Business/solver.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganmcleod/Desktop/Uni/ADS/Business/solver.c || cmake_object_order_depends_target_ADS
+  DEP_FILE = CMakeFiles/ADS.dir/Business/solver.c.o.d
   FLAGS = -g -std=gnu99 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
   OBJECT_DIR = CMakeFiles/ADS.dir
-  OBJECT_FILE_DIR = CMakeFiles/ADS.dir
+  OBJECT_FILE_DIR = CMakeFiles/ADS.dir/Business
 
-build CMakeFiles/ADS.dir/output_grid.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganmcleod/Desktop/Uni/ADS/output_grid.c || cmake_object_order_depends_target_ADS
-  DEP_FILE = CMakeFiles/ADS.dir/output_grid.c.o.d
+build CMakeFiles/ADS.dir/Business/output_grid.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganmcleod/Desktop/Uni/ADS/Business/output_grid.c || cmake_object_order_depends_target_ADS
+  DEP_FILE = CMakeFiles/ADS.dir/Business/output_grid.c.o.d
   FLAGS = -g -std=gnu99 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
   OBJECT_DIR = CMakeFiles/ADS.dir
-  OBJECT_FILE_DIR = CMakeFiles/ADS.dir
+  OBJECT_FILE_DIR = CMakeFiles/ADS.dir/Business
 
-build CMakeFiles/ADS.dir/file_handling.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganmcleod/Desktop/Uni/ADS/file_handling.c || cmake_object_order_depends_target_ADS
-  DEP_FILE = CMakeFiles/ADS.dir/file_handling.c.o.d
+build CMakeFiles/ADS.dir/Data/file_handling.c.o: C_COMPILER__ADS_unscanned_Debug /Users/meganmcleod/Desktop/Uni/ADS/Data/file_handling.c || cmake_object_order_depends_target_ADS
+  DEP_FILE = CMakeFiles/ADS.dir/Data/file_handling.c.o.d
   FLAGS = -g -std=gnu99 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
   OBJECT_DIR = CMakeFiles/ADS.dir
-  OBJECT_FILE_DIR = CMakeFiles/ADS.dir
+  OBJECT_FILE_DIR = CMakeFiles/ADS.dir/Data
 
 
 # =============================================================================
@@ -87,7 +87,7 @@ build CMakeFiles/ADS.dir/file_handling.c.o: C_COMPILER__ADS_unscanned_Debug /Use
 #############################################
 # Link the executable ADS
 
-build ADS: C_EXECUTABLE_LINKER__ADS_Debug CMakeFiles/ADS.dir/main.c.o CMakeFiles/ADS.dir/interface.c.o CMakeFiles/ADS.dir/solver.c.o CMakeFiles/ADS.dir/output_grid.c.o CMakeFiles/ADS.dir/file_handling.c.o
+build ADS: C_EXECUTABLE_LINKER__ADS_Debug CMakeFiles/ADS.dir/main.c.o CMakeFiles/ADS.dir/Presentation/interface.c.o CMakeFiles/ADS.dir/Business/solver.c.o CMakeFiles/ADS.dir/Business/output_grid.c.o CMakeFiles/ADS.dir/Data/file_handling.c.o
   FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
   OBJECT_DIR = CMakeFiles/ADS.dir
   POST_BUILD = :

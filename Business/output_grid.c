@@ -1,4 +1,4 @@
-#include "sudoku.h"
+#include "../Include/sudoku.h"
 int solution[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int solution_playable[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int solution_numbers_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};

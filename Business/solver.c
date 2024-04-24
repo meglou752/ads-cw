@@ -1,4 +1,4 @@
-#include "solver.h"
+#include "../Include/solver.h"
 
 /**
  * Generate a solution

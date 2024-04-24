@@ -1,4 +1,4 @@
-#include "sudoku.h"
+#include "../Include/sudoku.h"
 /**
  * Deal with user input for selecting difficulty upon new game creation
  * @return 1 for valid choice success; 0 for invalid choice
