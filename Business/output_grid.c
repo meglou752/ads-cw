@@ -1,4 +1,5 @@
 #include "../Include/sudoku.h"
+// Initialise boards, counters, stacks
 int solution[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int solution_playable[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int solution_numbers_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
@@ -28,6 +29,7 @@ int check_uniqueness()
             }
         }
     }
+    // If it is unique, copy to playable and commence play
     duplicate_board(solution_numbers_removed,solution_playable);
     return 1;
 }
@@ -44,6 +46,7 @@ void generate_unique_solution(const int num_to_remove) {
     duplicate_board(solution,solution_numbers_removed);
     remove_numbers(solution_numbers_removed, num_to_remove);
     int attempts = 0;
+
     while(!check_uniqueness())
     {
         // Retry removing numbers until check_uniqueness returns 1
@@ -82,6 +85,7 @@ void place_move(int board[ROW][COLUMN][PENCILMARKS], int x,int y, int number, in
     // Valid, place number in board
     else
     {
+        // Add move to move history stack
         board[y][x][0] = number;
         display_based_on_difficulty();
         Move move = {x, y, number};
@@ -146,7 +150,7 @@ void push(int *top, Move stack[], Move move)
 {
     if (*top == MAX_SIZE - 1)
     {
-        printf("\nOverflow!!");
+        printf("\nOverflow!!"); // Should not happen
     }
     else
     {
@@ -165,7 +169,7 @@ void pop(int *top, Move stack[])
 {
     if (*top == -1)
     {
-        printf("\nUnderflow!!");
+        printf("\nUnderflow!!"); // Should not happen
     }
     else
     {
@@ -240,9 +244,9 @@ void redo(int board[ROW][COLUMN][PENCILMARKS])
         display_based_on_difficulty();
     }
 
+    // Push to moves history stack and pop from redo stack
     push(&moves_top, moves, topMove);
     pop(&redo_top, redo_stack);
-    //display_game(board);
 }
 
 /**
@@ -294,6 +298,8 @@ void bot_output_random() {
         if (bot_nums_removed[i] != 0) {
             int x = (bot_nums_removed[i] - 1) / ROW;
             int y = (bot_nums_removed[i] - 1) % COLUMN;
+
+            // Alert the user to which move the bot has placed
             printf("\nBOT Played %d,%d: %d\n", y,x,bot_solution[x][y][0]);
             bot_solution_nums_removed[x][y][0] = bot_solution[x][y][0];
             display_based_on_difficulty();

@@ -1,7 +1,5 @@
 #include "../Include/solver.h"
 
-//int bot_nums_removed[HARD];
-
 
 /**
  * Check validity of the current number to try in the specified coordinate by row, column, unit and pencil-mark state.
@@ -36,6 +34,7 @@ int validity_check(int board[ROW][COLUMN][PENCILMARKS], int row, int column, int
 
     return 1; // Valid placement
 }
+
 
 /**
  * Randomly shuffle an array of numbers of specified length
@@ -145,7 +144,7 @@ void duplicate_board(int input[ROW][COLUMN][PENCILMARKS], int output[ROW][COLUMN
 }
 
 /**
- * Function to generate random coordinates based on difficulty, time complexity O(n)
+ * Function to generate random coordinates based on difficulty, linear time complexity O(n)
  * @param board 3D array representing the board to be edited
  * @param num_to_remove Numbers to be removed from the grid, depends on difficulty level
  */
@@ -168,7 +167,7 @@ void remove_numbers(int board[ROW][COLUMN][PENCILMARKS], int num_to_remove)
         {
             for (int num = 0; num < HARD; num++)
             {
-                // Store the numbers being removed, if handling bot grid, to enable random automated output with linear time complexity
+                // Store the numbers being removed, if handling bot grid, to enable random automated output with linear time complexity O(n)
                 if(bot_nums_removed[num] == 0)
                 {
                     bot_nums_removed[num] = nums_to_remove[num];
