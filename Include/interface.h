@@ -1,9 +1,9 @@
 
 #include <pthread/pthread.h>
 #include "sudoku.h"
-#define EASY 30
-#define MEDIUM 40
-#define HARD 50
+#define EASY 1
+#define MEDIUM 2
+#define HARD 3
 #define MAX_FILE_PATH_LENGTH 1024
 extern int player_move_counter;
 extern char file_name[1024];

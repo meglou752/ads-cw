@@ -99,7 +99,7 @@ void save_game() {
     save_stack(redo_stack, redo_top, file, "REDO_STACK");
     fclose(file);
     printf("Game saved successfully!\n\n\n");
-    home();
+    exit(0);
 }
 
 /**
@@ -117,7 +117,7 @@ void load_game()
         {
             handle_input(solution_playable);
         }
-        // Bug here: bot thread will not rejoin on replay, even with re-creation (
+        // Bug here: bot thread will not rejoin on replay, even with re-creation of thread
         pthread_join(bot, NULL);
     }
     else
@@ -143,7 +143,7 @@ void delete_saves(const char *filename)
         return;
     }
 
-    printf("Game '%s' deleted successfully!\n\n\n", filename);
+    printf("\nGame '%s' deleted successfully!\n\n\n", filename);
     home();
 }
 

@@ -461,7 +461,7 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
             if (save == 'Y') {
                 save_game();
             } else {
-                home();
+                exit(0);
             }
             return 1;
 
@@ -478,7 +478,7 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
             if (save == 'Y') {
                 save_game();
             } else {
-                home();
+                exit(0);
             }
             return 1;
 
@@ -495,7 +495,7 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
         if (save == 'Y') {
             save_game();
         } else {
-            home();
+            exit(0);
         }
         return 1;
     }
