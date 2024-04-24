@@ -303,3 +303,19 @@ void bot_output_random() {
         }
     }
 }
+
+/**
+* Save Game
+*/
+//Appending difficulty, progress?, board state, board solution, board_nums_rem
+//if hard, append bot states (initial & current)
+//undo + redo stack states (pop to array)
+//Check game id,name already exists in sub-dir; if yes, overwrite file data, if no, create new file new
+
+/**
+* Load game
+*/
+//Depending on difficulty , loop through 'objects' in file and assign to global variables
+//Rest is handled in restart game
+
+

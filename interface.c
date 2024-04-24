@@ -1,5 +1,4 @@
 #include "sudoku.h"
-
 /**
  * Deal with user input for selecting difficulty upon new game creation
  * @return 1 for valid choice success; 0 for invalid choice
@@ -10,6 +9,8 @@ int player_move_counter;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int pthread_cancel(pthread_t bot);
 pthread_t bot;
+int game_completed = 0;
+
 /**
  * Entry point
  */
@@ -220,27 +221,26 @@ void new_game(int difficulty_level)
     pthread_create(&bot, NULL, bot_thread, NULL);
 
     // If valid choice is received, initialise and display game based on difficulty
-        generate_unique_solution(difficulty_level);
-        if(difficulty_level == HARD)
-        {
-            generate_bot_solution();
-            display_game_hard_difficulty(solution_playable, bot_solution_nums_removed);
-        }
-        else
-        {
-            display_game(solution_playable);
+    generate_unique_solution(difficulty_level);
+    if(difficulty_level == HARD)
+    {
+        generate_bot_solution();
+        display_game_hard_difficulty(solution_playable, bot_solution_nums_removed);
+    }
+    else
+    {
+        display_game(solution_playable);
 
-        }
+    }
 
     if(difficulty_level == HARD)
     {
-        while(!game_complete(solution_playable) || !game_complete(bot_solution_nums_removed))
+        while(!game_complete(solution_playable) && !game_complete(bot_solution_nums_removed))
         {
             handle_input(solution_playable, difficulty_level);
         }
-        // Enter bot thread
-        pthread_join(bot, NULL);
 
+        pthread_join(bot, NULL);
     }
     else
     {
@@ -264,19 +264,14 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS], int difficulty_level)
     scanf(" %c", &input);
     clear_input_buffer();
     input = toupper((unsigned char)input);
-
-
-        switch (input) {
+    switch (input) {
         case 'S':
-            // Logic to save and exit
             save_game();
             break;
         case 'U':
-            // Logic to undo
             undo(solution_playable);
             break;
         case 'R':
-            // Logic to redo
             redo(solution_playable);
             break;
         case 'P':
@@ -324,7 +319,14 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS], int difficulty_level)
  */
 void restart_game()
 {
-    load_game();
+    // Load saved games
+    // Option to delete , or replay through the game? if game progress/bot progress == 100%, allow to cycle through moves?
+    // OR only allow games to save if they are incomplete
+    // Scan user input here, if bringing back into play based on id, call load game (output_grid.c) to set board and stack states
+                //Store difficulty and display based on this
+                //Call handle input to deal with it from there
+    // If deleting , rm file and reload interface
+
 }
 
 
@@ -357,12 +359,16 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
     }
 
     // Game complete
-    if(difficulty_setting == 'H')
+    if(difficulty_level == HARD)
     {
-        if(board == bot_solution_nums_removed)
+        // Bug here; if the user hasn't input, or another game has been played previously in this runs lifecycle, has trouble receiving completion
+        if(board == bot_solution_nums_removed )
         {
             char save;
+
             printf("\nThe bot won:( Would you like to save the game? (Y/N)\n");
+            home();
+            printf("INPUT: ");
             scanf(" %c", &save);
             clear_input_buffer();
             save = toupper((unsigned char) save);
@@ -376,9 +382,11 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
         }
         else if(board == solution_playable)
         {
-            pthread_cancel(bot);
+            //pthread_cancel(bot);
             char save;
             printf("\nYou win against the bot! Would you like to save the game? (Y/N)\n");
+            printf("INPUT: ");
+
             scanf(" %c", &save);
             clear_input_buffer();
             save = toupper((unsigned char) save);
@@ -394,6 +402,8 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
     else {
         char save;
         printf("\nGame complete! Would you like to save the game? (Y/N)\n");
+        printf("INPUT: ");
+
         scanf(" %c", &save);
         clear_input_buffer();
         save = toupper((unsigned char) save);
@@ -569,13 +579,16 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
 void* bot_thread(void* arg) {
     while (!game_complete(bot_solution_nums_removed)) {
         // Sleep for a random interval between 20 and 30 seconds
-        int random_time = rand() % 11 + 20;
+        int random_time = rand() % 1 + 10;
         sleep(random_time);
 
-        // Make a bot move
-        pthread_mutex_lock(&mutex);
-        bot_output_random();
-        pthread_mutex_unlock(&mutex);
+        // Make a bot move if the game is still ongoing
+        if (!game_complete(bot_solution_nums_removed)) {
+            pthread_mutex_lock(&mutex);
+            bot_output_random();
+            pthread_mutex_unlock(&mutex);
+        }
     }
+    pthread_cancel(bot);
     return NULL;
 }
