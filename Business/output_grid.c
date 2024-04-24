@@ -7,7 +7,7 @@ int bot_solution_nums_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_forward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_backward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int bot_nums_removed[HARD];
-int moves_top = -1,redo_top = -1, undo_stack[MAX_SIZE];
+int moves_top = -1,redo_top = -1;
 Move moves[MAX_SIZE];
 Move redo_stack[MAX_SIZE];
 int player_move_counter;

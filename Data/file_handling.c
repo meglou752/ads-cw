@@ -15,9 +15,13 @@ void save_3d_array(int board[ROW][COLUMN][PENCILMARKS], FILE *file, const char *
     fprintf(file, "\n");
 }
 
-void save_stack(Move stack[MAX_SIZE], FILE *file, const char *stack_name)
+void save_stack(Move stack[MAX_SIZE], int top, FILE *file, const char *stack_name)
 {
-
+    fprintf(file, "%s:\n", stack_name);
+    for (int i = 0; i <= top; i++) {
+        fprintf(file, "%d %d %d\n", stack[i].x, stack[i].y, stack[i].number);
+    }
+    fprintf(file, "\n");
 }
 
 /**
@@ -77,6 +81,9 @@ void save_game() {
         save_3d_array(bot_solution, file, "BS");
         save_3d_array(bot_solution_nums_removed,file,"BSNR");
     }
+    save_stack(moves, moves_top, file, "MS");
+    save_stack(redo_stack, redo_top, file, "RS");
+
     fclose(file);
     printf("Game saved successfully!\n\n\n");
     home();
