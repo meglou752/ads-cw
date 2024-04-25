@@ -109,7 +109,7 @@ void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y)
         board[y][x][0] = solution[y][x][0];
         display_based_on_difficulty();
         // Add to move history stack
-        Move move = {x, y, board[x][y][0]};
+        Move move = {x, y, board[y][x][0]};
         push(&moves_top, moves, move);
         clear_redo_stack(&redo_top, redo_stack);
     }
@@ -240,7 +240,7 @@ void redo(int board[ROW][COLUMN][PENCILMARKS])
     // If deletion, add the value back from the solution (inaccessible by struct here)
     else
     {
-        board[topMove.y][topMove.x][0] = 0;
+        board[topMove.x][topMove.y][0] = 0;
         display_based_on_difficulty();
     }
 
