@@ -376,7 +376,7 @@ int restart_game()
     }
 
     // Handle input for loading/deleting an old game
-    printf("\nDo you want to restart gameplay (R) or delete a game (D)?\n");
+    printf("\n\t\t\tDo you want to:\n\t\t  R: Restart gameplay \n\t       D: delete a game\n\t\t\t  B: go home \n");
     printf("INPUT: ");
     char choice;
     scanf("%c", &choice);
@@ -404,9 +404,14 @@ int restart_game()
                 home(); // Navigate home after deleting file
                 valid = true;
                 break;
+            case 'B':
+                home();
+                valid = true;
+                break;
             default:
-                printf("Invalid choice. Please enter R or D: ");
-                scanf("%c", &choice);
+                printf("Invalid choice. Please enter R, D or B: ");
+                scanf(" %c", &choice);
+                choice = toupper((unsigned char) choice);
                 clear_input_buffer();
                 break;
         }

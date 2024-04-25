@@ -1,10 +1,11 @@
 #include "sudoku.h"
 void save_game();
 void load_game();
-void check_saves();
-//void save_3d_array(int board[ROW][COLUMN][PENCILMARKS], FILE *file, const char *board_name);
 void delete_saves(const char *filename);
 void load_data(const char *filepath);
+
+// Commented out declarations; compiler doesn't like 'FILE' parameter here
+//void save_3d_array(int board[ROW][COLUMN][PENCILMARKS], FILE *file, const char *board_name);
 //void read_3d_array(int board[ROW][COLUMN][PENCILMARKS], FILE *file);
 //void read_stack(Move stack[MAX_SIZE], int *top, FILE *file);
 
