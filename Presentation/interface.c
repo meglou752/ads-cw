@@ -16,7 +16,7 @@ int replay_flag = 0;
  */
 void interface()
 {
-    home();
+        home();
 }
 
 /**
@@ -318,6 +318,7 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
         case 'S':
             pthread_cancel(bot);
             save_game();
+            cleanup_stacks();
             break;
         case 'U':
             undo(solution_playable);
@@ -364,6 +365,7 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
         case 'X':
             pthread_cancel(bot);
             home();
+            cleanup_stacks();
         default:
             printf("Enter valid input.\n");
             break;
@@ -392,9 +394,7 @@ void handle_input_replay(int board[ROW][COLUMN][PENCILMARKS])
             break;
         case 'X':
             replay_flag = 0;
-            free(undo_stack);
-            free(redo_stack);
-            free(move_history);
+            cleanup_stacks();
             home();
             break;
         default:

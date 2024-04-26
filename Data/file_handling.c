@@ -262,7 +262,7 @@ void reverse_stack()
     {
         // Pop each element from the move history stack
         Move topMove = move_history[i];
-        push(&redo_top, redo_stack, topMove);
+        push(&redo_top, &redo_stack, topMove, &redo_size);
     }
 }
 
