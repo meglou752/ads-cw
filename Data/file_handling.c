@@ -95,8 +95,9 @@ void save_game() {
         save_3d_array(bot_solution, file, "BOT_SOLUTION");
         save_3d_array(bot_solution_nums_removed,file,"BOT_SOLUTION_NUMS_REMOVED");
     }
-    save_stack(moves, moves_top, file, "MOVES_STACK");
+    save_stack(undo_stack, undo_top, file, "UNDO_STACK");
     save_stack(redo_stack, redo_top, file, "REDO_STACK");
+    save_stack(move_history, move_history_top, file, "MOVE_HISTORY_STACK");
     fclose(file);
     printf("Game saved successfully!\n\n\n");
     exit(0);
@@ -235,16 +236,48 @@ void load_data(const char *filepath) {
                 read_3d_array(solution_numbers_removed, file);
             } else if (strcmp(key, "SOLUTION_PLAYABLE:") == 0) {
                 read_3d_array(solution_playable, file);
-            } else if (strcmp(key, "BOT_SOLUTION:") == 0) {
+            } else if (strcmp(key, "BOT_SOLUTION:") == 0 && replay_flag != 1) {
                 read_3d_array(bot_solution, file);
-            } else if (strcmp(key, "BOT_SOLUTION_NUMS_REMOVED:") == 0) {
+            } else if (strcmp(key, "BOT_SOLUTION_NUMS_REMOVED:") == 0 && replay_flag != 1) {
                 read_3d_array(bot_solution_nums_removed, file);
-            } else if (strcmp(key, "MOVES_STACK:") == 0) {
-                read_stack(moves, &moves_top, file);
-            } else if (strcmp(key, "REDO_STACK:") == 0) {
+            } else if (strcmp(key, "UNDO_STACK:") == 0 && replay_flag != 1) {
+                read_stack(undo_stack, &undo_top, file);
+            } else if (strcmp(key, "REDO_STACK:") == 0 && replay_flag != 1)  {
                 read_stack(redo_stack, &redo_top, file);
+            } else if (strcmp(key, "MOVE_HISTORY_STACK:") == 0) {
+                read_stack(move_history, &move_history_top, file);
             }
         }
     }
     fclose(file);
+}
+
+/**
+ * Add all of the moves from gameplay to the redo stack for looking through move history
+ */
+void reverse_stack()
+{
+    // Iterate through the move history stack in reverse order
+    for (int i = move_history_top; i >= 0; i--)
+    {
+        // Pop each element from the move history stack
+        Move topMove = move_history[i];
+        push(&redo_top, redo_stack, topMove);
+    }
+}
+
+
+
+void cycle_through_moves()
+{
+    printf("Game loaded successfully!\n");
+    snprintf(file_path, sizeof(file_path), "%s/%s", files_dir, file_name); // Construct file path
+    load_data(file_path); // Pass file path to load_data
+    reverse_stack(move_history, &move_history_top, redo_stack, &redo_top);
+    display_game_replay(solution_numbers_removed);
+    //handle_input_replay(solution_playable);
+    while(replay_flag)
+    {
+        handle_input_replay(solution_numbers_removed);
+    }
 }

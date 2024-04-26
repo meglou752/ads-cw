@@ -10,3 +10,5 @@ void load_data(const char *filepath);
 //void read_stack(Move stack[MAX_SIZE], int *top, FILE *file);
 
 void load_filepath(const char *filename);
+void cycle_through_moves();
+void reverse_stack();

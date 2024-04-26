@@ -10,7 +10,7 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int pthread_cancel(pthread_t bot);
 pthread_t bot;
 char file_name[1024];
-
+int replay_flag = 0;
 /**
  * Entry point
  */
@@ -173,7 +173,54 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
     printf("◦ ╚═══════════╧═══════════╧═══════════╝\n");
     progress();
 }
+/**
+ *
+ * @param board
+ */
+void display_game_replay(int board[ROW][COLUMN][PENCILMARKS])
+{
+    printf("\n  ◦ 0   1   2 ◦ 3   4   5 ◦ 6   7   8 ◦\n");
+    printf("◦ ╔═══════════╤═══════════╤═══════════╗");
+    printf("\n");
 
+    for (int i = 0; i < ROW; i++) {
+        if (i % 3 == 0 && i != 0) {
+                printf("◦ ╟───────────│───────────│───────────╢\n"); // Print horizontal divider after every 3 rows
+        }
+
+        for (int j = 0; j < COLUMN; j++) {
+            if (j % 3 == 0 && j != 0) {
+                printf(" │ "); // Print vertical divider after every 3 columns within a row
+            }
+            else if(j == 0)
+            {
+                printf("%d ║ ",i);
+            }
+            else if (j == 8)
+            {
+                printf("%2d ", board[i][j][0]);
+                printf(" ║ ");
+                if(i == 0)
+                {
+                    printf("To go forward a move: F");
+                }
+                else if( i == 1)
+                {
+                    printf("To go back a move:  B");
+                }
+                else if (i == 2)
+                {
+                    printf("To go home: X ");
+                }
+            }
+            if(j != 8) {
+                printf("%2d ", board[i][j][0]);
+            }
+        }
+        printf("\n");
+    }
+    printf("◦ ╚═══════════╧═══════════╧═══════════╝\n");
+}
 
 /**
  * Calculate progress based on number of cells filled in compared to number of blank cells output originally
@@ -324,6 +371,38 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
 }
 
 /**
+ *
+ * @param board
+ */
+void handle_input_replay(int board[ROW][COLUMN][PENCILMARKS])
+{
+    //display_game_replay(solution_playable);
+    char input;
+    printf("INPUT: ");
+    scanf(" %c", &input);
+    clear_input_buffer();
+    input = toupper((unsigned char)input);
+    //while exit != false
+    switch (input) {
+        case 'F':
+            replay_forward(board);
+            break;
+        case 'B':
+            replay_backward(board);
+            break;
+        case 'X':
+            replay_flag = 0;
+            free(undo_stack);
+            free(redo_stack);
+            free(move_history);
+            home();
+            break;
+        default:
+            printf("Enter valid input.\n");
+            break;
+    }
+}
+/**
  * Prompt user to enter filename and validate it
  * @param file_path Buffer to store the file path
  * @param current_dir Current directory path
@@ -376,7 +455,7 @@ int restart_game()
     }
 
     // Handle input for loading/deleting an old game
-    printf("\n\t\t\tDo you want to:\n\t\t  R: Restart gameplay \n\t       D: delete a game\n\t\t\t  B: go home \n");
+    printf("\n\t\t\tDo you want to:\n\t\t  R: Restart gameplay \n\t       D: delete a game\n \t   S: See the moves of a game\n\t\t\t  B: go home \n");
     printf("INPUT: ");
     char choice;
     scanf("%c", &choice);
@@ -404,12 +483,18 @@ int restart_game()
                 home(); // Navigate home after deleting file
                 valid = true;
                 break;
+            case 'S':
+                while (!enter_filename(file_path, current_dir)) {
+                    printf("Invalid filename. Please enter a valid filename.\n");
+                }
+                replay_flag = 1;
+                cycle_through_moves();
             case 'B':
                 home();
                 valid = true;
                 break;
             default:
-                printf("Invalid choice. Please enter R, D or B: ");
+                printf("Invalid choice. Please enter R, D, S or B: ");
                 scanf(" %c", &choice);
                 choice = toupper((unsigned char) choice);
                 clear_input_buffer();
@@ -688,7 +773,7 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
 }
 
 /**
- * Runs continuously until the game is complete/saved, upon entry, making bot moves at random intervals.
+ * Runs continuously until the game is complete/saved, upon entry, making bot undo at random intervals.
  * @return NULL when the thread closes
  */
 void* bot_thread() {

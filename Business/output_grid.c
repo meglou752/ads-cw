@@ -8,9 +8,10 @@ int bot_solution_nums_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_forward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int test_grid_backward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int bot_nums_removed[HARD];
-int moves_top = -1,redo_top = -1;
-Move moves[MAX_SIZE];
+int move_history_top = -1,undo_top = -1,redo_top = -1;
+Move undo_stack[MAX_SIZE];
 Move redo_stack[MAX_SIZE];
+Move move_history[MAX_SIZE];
 int player_move_counter;
 
 /**
@@ -89,8 +90,8 @@ void place_move(int board[ROW][COLUMN][PENCILMARKS], int x,int y, int number, in
         board[y][x][0] = number;
         display_based_on_difficulty();
         Move move = {x, y, number};
-        push(&moves_top, moves, move);
-
+        push(&move_history_top, move_history, move);
+        push(&undo_top, undo_stack, move);
         // Clear redo stack
         clear_redo_stack(&redo_top, redo_stack);
     }
@@ -110,7 +111,8 @@ void reveal_hint(int board[ROW][COLUMN][PENCILMARKS],int x, int y)
         display_based_on_difficulty();
         // Add to move history stack
         Move move = {x, y, board[y][x][0]};
-        push(&moves_top, moves, move);
+        push(&move_history_top, move_history, move);
+        push(&undo_top, undo_stack, move);
         clear_redo_stack(&redo_top, redo_stack);
     }
     else
@@ -136,15 +138,15 @@ void delete_move(int board[ROW][COLUMN][PENCILMARKS], int x, int y)
         board[y][x][0] = 0;
         display_based_on_difficulty();
         Move move = {x, y, board[x][y][0]};
-        push(&moves_top, moves, move);
-    }
+        push(&move_history_top, move_history, move);
+        push(&undo_top, undo_stack, move);    }
 }
 
 /**
  * Push value onto stack
  * @param top Pointer to top element of stack
- * @param stack Stack of struct instances representing moves
- * @param move The current moves' struct
+ * @param stack Stack of struct instances representing undo
+ * @param move The current undo' struct
  */
 void push(int *top, Move stack[], Move move)
 {
@@ -163,7 +165,7 @@ void push(int *top, Move stack[], Move move)
 /**
  * Pop value from stack
  * @param top Pointer to top element of stack
- * @param stack Stack of struct instances representing moves
+ * @param stack Stack of struct instances representing undo
  */
 void pop(int *top, Move stack[])
 {
@@ -185,15 +187,20 @@ void pop(int *top, Move stack[])
 void undo(int board[ROW][COLUMN][PENCILMARKS])
 {
     // Check if there are any moves to undo
-    if (moves_top == -1)
+    if (undo_top == -1)
     {
         printf("\nNo moves to undo.\n");
         return;
     }
 
     // Retrieve the top move from the stack
-    Move topMove = moves[moves_top];
+    Move topMove = undo_stack[undo_top];
     push(&redo_top, redo_stack, topMove);
+    Move topMoveNullVal;
+    topMoveNullVal.x = topMove.x;
+    topMoveNullVal.y = topMove.y;
+    topMoveNullVal.number = 0;
+    push(&move_history_top, move_history, topMoveNullVal);
     // Update the board with the values from the top move
     // If the move is not a deletion, set the value to 0
     if(board[topMove.y][topMove.x][0] != 0) {
@@ -210,8 +217,7 @@ void undo(int board[ROW][COLUMN][PENCILMARKS])
             display_game_hard_difficulty(solution_playable,bot_solution_nums_removed);
         }
     }
-    // Pop the top move from the stack
-    pop(&moves_top, moves);
+    pop(&undo_top, undo_stack);
 }
 
 
@@ -244,8 +250,9 @@ void redo(int board[ROW][COLUMN][PENCILMARKS])
         display_based_on_difficulty();
     }
 
-    // Push to moves history stack and pop from redo stack
-    push(&moves_top, moves, topMove);
+    // Push to undo history stack and pop from redo stack
+    push(&undo_top, undo_stack, topMove);
+    push(&move_history_top, move_history, topMove);
     pop(&redo_top, redo_stack);
 }
 
@@ -259,7 +266,43 @@ void clear_redo_stack(int *top, Move stack[]) {
 }
 
 
+void replay_forward(int board[ROW][COLUMN][PENCILMARKS])
+{
+    // Check if there are any moves to redo
+    if (redo_top == -1)
+    {
+        printf("\nNo moves to see.\n");
+        return;
+    }
 
+    Move topMove = redo_stack[redo_top];
+    board[topMove.y][topMove.x][0] = topMove.number; // Set the cell value to 0
+    display_game_replay(solution_numbers_removed);
+
+    push(&undo_top, undo_stack, topMove);
+    pop(&redo_top, redo_stack);
+}
+
+
+/**
+ * Add last undone move to the board
+ * @param board Board to be edited
+ */
+void replay_backward(int board[ROW][COLUMN][PENCILMARKS])
+{
+    // Check if there are any moves to undo
+    if (undo_top == -1)
+    {
+        printf("\nNo moves to redo.\n");
+        return;
+    }
+    // Retrieve the top move from the stack
+    Move topMove = undo_stack[undo_top];
+    push(&redo_top, redo_stack, topMove);
+    board[topMove.y][topMove.x][0] = 0; // Set the cell value to 0
+    display_game_replay(solution_numbers_removed);
+    pop(&undo_top, undo_stack);
+}
 // BOT FUNCTIONS
 
 /**
@@ -282,7 +325,7 @@ void display_based_on_difficulty()
     {
         display_game_hard_difficulty(solution_playable,bot_solution_nums_removed);
     }
-    else
+    else if (difficulty_level == MEDIUM || difficulty_level == EASY)
     {
         display_game(solution_playable);
     }
