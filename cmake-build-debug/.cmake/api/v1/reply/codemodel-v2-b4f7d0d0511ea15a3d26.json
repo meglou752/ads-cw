@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/meganmcleod/Desktop/Uni/ADS/cmake-build-debug",
-		"source" : "/Users/meganmcleod/Desktop/Uni/ADS"
+		"build" : "/Users/meganmcleod/Downloads/ADS/cmake-build-debug",
+		"source" : "/Users/meganmcleod/Downloads/ADS"
 	},
 	"version" : 
 	{

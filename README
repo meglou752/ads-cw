@@ -1,0 +1,29 @@
+ALGORITHMS & DATA STRUCTURES: SUDOKU IMPLEMENTATION
+###By Megan McLeod, 40585934###
+This project is an interpretation of the game Sudoku, developed using CLion, a powerful cross-platform IDE for C and C++ development.
+
+
+Install CLion:
+    Download and install CLion from this link: CLion Download Page
+    CLion is free for students and teachers.
+
+Configure C Compiler:
+    Open CLion and navigate to Settings > Build, Execution & Deployment > Toolchains.
+    Ensure that the C Compiler has detected a compiler source.
+    If the compiler source is not detected, follow the instructions below for your operating system:
+    For Windows:
+        Install MinGW by following the steps provided here.
+        Add MinGW to your system PATH.
+    For Mac:
+        Install Xcode command line tools by running xcode-select --install in the terminal.
+
+Decompress Project Files:
+    Navigate to the folder where this project is downloaded and decompress.
+
+Open project in CLion:
+    Open CLion IDE.
+    Click on 'Open' and navigate to the folder where the project was installed and unzipped.
+    Select the decompressed project folder and click 'Open'.
+
+Build and Run:
+    Once the project is opened in CLion, click on the 'Run' button to build and execute the project.

@@ -50,6 +50,7 @@ void shuffle(int unit[], int size) {
     }
 }
 
+
 /**
  * Place randomly shuffled arrays along the diagonal units of the puzzle
  * @param board Board to seed units into
@@ -77,6 +78,7 @@ void seed_random_units(int board[ROW][COLUMN][PENCILMARKS]) {
         }
     }
 }
+
 
 /**
  * Transverse through the board, trying for valid values 1-9 for each cell, until a valid solution is found
@@ -142,6 +144,7 @@ void duplicate_board(int input[ROW][COLUMN][PENCILMARKS], int output[ROW][COLUMN
             }
         }
 }
+
 
 /**
  * Function to generate random coordinates based on difficulty, linear time complexity O(n)

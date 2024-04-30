@@ -11,7 +11,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/meganmcleod/Desktop/Uni/ADS/cmake-build-debug"
+			"value" : "/Users/meganmcleod/Downloads/ADS/cmake-build-debug"
 		},
 		{
 			"name" : "ADS_IS_TOP_LEVEL",
@@ -35,7 +35,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/meganmcleod/Desktop/Uni/ADS"
+			"value" : "/Users/meganmcleod/Downloads/ADS"
 		},
 		{
 			"name" : "CMAKE_ADDR2LINE",
@@ -91,7 +91,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/Users/meganmcleod/Desktop/Uni/ADS/cmake-build-debug"
+			"value" : "/Users/meganmcleod/Downloads/ADS/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -419,7 +419,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/meganmcleod/Desktop/Uni/ADS/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "/Users/meganmcleod/Downloads/ADS/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -479,7 +479,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/Users/meganmcleod/Desktop/Uni/ADS"
+			"value" : "/Users/meganmcleod/Downloads/ADS"
 		},
 		{
 			"name" : "CMAKE_INSTALL_NAME_TOOL",

@@ -1,4 +1,4 @@
-
+#ifndef ADS_INTERFACE_H
 #include <pthread/pthread.h>
 #include "sudoku.h"
 #define EASY 30
@@ -29,3 +29,4 @@ extern pthread_t bot;
 extern int replay_flag;
 
 
+#endif //ADS_INTERFACE_H

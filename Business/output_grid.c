@@ -1,5 +1,5 @@
 #include "../Include/sudoku.h"
-// Initialise boards, counters, stacks
+// Initialise boards, counters, stacks, and stack managing integers
 int solution[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int solution_playable[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int solution_numbers_removed[ROW][COLUMN][PENCILMARKS] = {{{0}}};
@@ -10,23 +10,30 @@ int test_grid_backward[ROW][COLUMN][PENCILMARKS] = {{{0}}};
 int bot_nums_removed[HARD];
 int move_history_top = -1,undo_top = -1,redo_top = -1, move_size = 0, undo_size = 0, redo_size = 0;
 int player_move_counter;
-int MAX_SIZE = 100;
+int MAX_SIZE = 5;
 
 // Define pointers for stacks
 Move* undo_stack = NULL;
 Move* redo_stack = NULL;
 Move* move_history = NULL;
 
+/**
+ * Initialise stacks on the heap
+ */
 void init_stacks() {
+    // Allocate memory
     undo_stack = (Move*)malloc(MAX_SIZE * sizeof(Move));
     redo_stack = (Move*)malloc(MAX_SIZE * sizeof(Move));
     move_history = (Move*)malloc(MAX_SIZE * sizeof(Move));
-    printf("Stacks initialised: size %d");
     if (undo_stack == NULL || redo_stack == NULL || move_history == NULL) {
         printf("Memory allocation failed. Exiting...\n");
         exit(EXIT_FAILURE);
     }
 }
+
+/**
+ * Free stack memory
+ */
 void cleanup_stacks() {
     printf("Cleaning up stacks...\n");
     free(undo_stack);
@@ -168,10 +175,11 @@ void delete_move(int board[ROW][COLUMN][PENCILMARKS], int x, int y)
  * @param top Pointer to top element of stack
  * @param stack Stack of struct instances representing undo
  * @param move The current undo' struct
+ * @param size The current number of elements of the stack being passed
  */
 void push(int *top, Move** stack, Move move, int *size) {
     // Check if the stack is full
-    if (size == MAX_SIZE) {
+    if (*size == MAX_SIZE) {
         // Resize the stack
         *stack = (Move*)realloc(*stack, (MAX_SIZE * 2) * sizeof(Move));
         if (*stack == NULL) {
@@ -179,18 +187,20 @@ void push(int *top, Move** stack, Move move, int *size) {
             exit(EXIT_FAILURE);
         }
         // Update MAX_SIZE to reflect the new size
+        printf("Reallocating memory...\n");
         MAX_SIZE *= 2;
     }
     *top = *top + 1;
     // Push the move onto the stack
     (*stack)[*top] = move;
-    size++; // Increment the current size
+    (*size)++; // Increment the current size
 }
 
 /**
  * Pop value from stack
  * @param top Pointer to top element of stack
  * @param stack Stack of struct instances representing undo
+ * @param size The current number of elements in the stack being passed
  */
 void pop(int *top, int *size) {
     if (*top == -1) {
@@ -216,12 +226,15 @@ void undo(int board[ROW][COLUMN][PENCILMARKS])
 
     // Retrieve the top move from the stack
     Move topMove = undo_stack[undo_top];
+
+    // Move the move from unto to redo, and store this as a move in game history
     push(&redo_top, &redo_stack, topMove, &redo_size);
     Move topMoveNullVal;
     topMoveNullVal.x = topMove.x;
     topMoveNullVal.y = topMove.y;
     topMoveNullVal.number = 0;
     push(&move_history_top, &move_history, topMoveNullVal, &move_size);
+
     // Update the board with the values from the top move
     // If the move is not a deletion, set the value to 0
     if(board[topMove.y][topMove.x][0] != 0) {
@@ -256,7 +269,7 @@ void redo(int board[ROW][COLUMN][PENCILMARKS])
         return;
     }
 
-    // Get the struct of the top element of the stack
+    // Get the top element of the stack
     Move topMove = redo_stack[redo_top];
 
     // If normal move, add back to the board by value
@@ -271,7 +284,7 @@ void redo(int board[ROW][COLUMN][PENCILMARKS])
         display_based_on_difficulty();
     }
 
-    // Push to undo history stack and pop from redo stack
+    // Push to undo history stack and pop from redo stack , store in move history
     push(&undo_top, &undo_stack, topMove, &undo_size);
     push(&move_history_top, &move_history, topMove, &move_size);
     pop(&redo_top, &redo_size);
@@ -287,7 +300,10 @@ void clear_redo_stack(int *top, Move stack[]) {
     redo_size = 0;
 }
 
-
+/**
+ * Move forwards by one move through the move history of the game
+ * @param board the board to be displayed onto
+ */
 void replay_forward(int board[ROW][COLUMN][PENCILMARKS])
 {
     // Check if there are any moves to redo
@@ -297,17 +313,19 @@ void replay_forward(int board[ROW][COLUMN][PENCILMARKS])
         return;
     }
 
+    // Add the value back to the board
     Move topMove = redo_stack[redo_top];
     board[topMove.y][topMove.x][0] = topMove.number; // Set the cell value to 0
     display_game_replay(solution_numbers_removed);
 
+    // Move the 'move' for going backward through the moves
     push(&undo_top, &undo_stack, topMove, &undo_size);
     pop(&redo_top, &redo_size);
 }
 
 
 /**
- * Add last undone move to the board
+ * Move backward through previous gameplay
  * @param board Board to be edited
  */
 void replay_backward(int board[ROW][COLUMN][PENCILMARKS])
@@ -318,13 +336,14 @@ void replay_backward(int board[ROW][COLUMN][PENCILMARKS])
         printf("\nNo moves to redo.\n");
         return;
     }
-    // Retrieve the top move from the stack
+    // Retrieve the top move from the stack, add it to redo
     Move topMove = undo_stack[undo_top];
     push(&redo_top, &redo_stack, topMove, &redo_size);
-    board[topMove.y][topMove.x][0] = 0; // Set the cell value to 0
+    board[topMove.y][topMove.x][0] = topMove.number; // Set the cell value to 0
     display_game_replay(solution_numbers_removed);
     pop(&undo_top, &undo_size);
 }
+
 // BOT FUNCTIONS
 
 /**

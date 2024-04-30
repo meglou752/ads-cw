@@ -1,3 +1,4 @@
+#ifndef ADS_SOLVER_H
 
 #include "sudoku.h"
 
@@ -18,3 +19,4 @@ int backtracking(int board[ROW][COLUMN][PENCILMARKS], int row, int column);
 int reverse_backtracking(int board[ROW][COLUMN][PENCILMARKS], int row, int column);
 void duplicate_board(int input[ROW][COLUMN][PENCILMARKS], int output[ROW][COLUMN][PENCILMARKS]);
 void remove_numbers(int board[ROW][COLUMN][PENCILMARKS], int num_to_remove);
+#endif //ADS_SOLVER_H

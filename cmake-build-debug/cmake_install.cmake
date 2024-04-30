@@ -1,4 +1,4 @@
-# Install script for directory: /Users/meganmcleod/Desktop/Uni/ADS
+# Install script for directory: /Users/meganmcleod/Downloads/ADS
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/meganmcleod/Desktop/Uni/ADS/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/meganmcleod/Downloads/ADS/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

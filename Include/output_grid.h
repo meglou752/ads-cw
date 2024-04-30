@@ -1,3 +1,4 @@
+#ifndef ADS_OUTPUT_GRID_H
 #include "sudoku.h"
 
 typedef struct {
@@ -31,3 +32,5 @@ extern Move* redo_stack;
 extern Move* move_history;
 extern int MAX_SIZE;
 extern int current_size;
+
+#endif //ADS_OUTPUT_GRID_H

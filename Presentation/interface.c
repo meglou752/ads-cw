@@ -11,6 +11,8 @@ int pthread_cancel(pthread_t bot);
 pthread_t bot;
 char file_name[1024];
 int replay_flag = 0;
+
+
 /**
  * Entry point
  */
@@ -18,6 +20,7 @@ void interface()
 {
         home();
 }
+
 
 /**
  * Home page interface logic
@@ -57,6 +60,7 @@ void home()
         }
     }
 }
+
 
 /**
  * Difficulty interface logic
@@ -161,7 +165,7 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
                 }
                 else if(i == 5)
                 {
-                    printf("To go home: X ");
+                    printf("To exit: X ");
                 }
             }
             if(j != 8) {
@@ -173,9 +177,11 @@ void display_game(int board[ROW][COLUMN][PENCILMARKS])
     printf("◦ ╚═══════════╧═══════════╧═══════════╝\n");
     progress();
 }
+
+
 /**
- *
- * @param board
+ * Basic display function for viewing previous moves
+ * @param board To be dislpayed
  */
 void display_game_replay(int board[ROW][COLUMN][PENCILMARKS])
 {
@@ -210,7 +216,7 @@ void display_game_replay(int board[ROW][COLUMN][PENCILMARKS])
                 }
                 else if (i == 2)
                 {
-                    printf("To go home: X ");
+                    printf("To exit: X ");
                 }
             }
             if(j != 8) {
@@ -221,6 +227,7 @@ void display_game_replay(int board[ROW][COLUMN][PENCILMARKS])
     }
     printf("◦ ╚═══════════╧═══════════╧═══════════╝\n");
 }
+
 
 /**
  * Calculate progress based on number of cells filled in compared to number of blank cells output originally
@@ -264,6 +271,7 @@ void progress()
     printf("\n");
 }
 
+
 /**
  * Logic for new game menu option
  */
@@ -302,6 +310,7 @@ void new_game()
     }
 }
 
+
 /**
  * Gameplay input handling
  * @param board Playable board
@@ -318,7 +327,6 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
         case 'S':
             pthread_cancel(bot);
             save_game();
-            cleanup_stacks();
             break;
         case 'U':
             undo(solution_playable);
@@ -364,8 +372,8 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
             break;
         case 'X':
             pthread_cancel(bot);
-            home();
             cleanup_stacks();
+            exit(0);
         default:
             printf("Enter valid input.\n");
             break;
@@ -373,8 +381,8 @@ void handle_input(int board[ROW][COLUMN][PENCILMARKS])
 }
 
 /**
- *
- * @param board
+ * Handle user input when viewing previous game moves only, not playing
+ * @param board To be interacted with
  */
 void handle_input_replay(int board[ROW][COLUMN][PENCILMARKS])
 {
@@ -395,13 +403,15 @@ void handle_input_replay(int board[ROW][COLUMN][PENCILMARKS])
         case 'X':
             replay_flag = 0;
             cleanup_stacks();
-            home();
+            exit(0);
             break;
         default:
             printf("Enter valid input.\n");
             break;
     }
 }
+
+
 /**
  * Prompt user to enter filename and validate it
  * @param file_path Buffer to store the file path
@@ -421,6 +431,7 @@ int enter_filename(char *file_path, const char *current_dir) {
         return 0; // Invalid filename
     }
 }
+
 
 /**
  * Logic for restart game option interface
@@ -567,7 +578,9 @@ int game_complete(int board[ROW][COLUMN][PENCILMARKS])
             save = toupper((unsigned char) save);
             if (save == 'Y') {
                 save_game();
+                cleanup_stacks();
             } else {
+                cleanup_stacks();
                 exit(0);
             }
             return 1;
@@ -771,6 +784,7 @@ void display_game_hard_difficulty(int board[ROW][COLUMN][PENCILMARKS], int bot_b
     printf("◦ ╚═══════════╧═══════════╧═══════════╝\t\t\t\t\t\t\t\t╚═══════════╧═══════════╧═══════════╝\n");
     progress();
 }
+
 
 /**
  * Runs continuously until the game is complete/saved, upon entry, making bot undo at random intervals.

@@ -100,8 +100,10 @@ void save_game() {
     save_stack(move_history, move_history_top, file, "MOVE_HISTORY_STACK");
     fclose(file);
     printf("Game saved successfully!\n\n\n");
+    cleanup_stacks();
     exit(0);
 }
+
 
 /**
  * Load a game from a specific filename in player_saves directory into play
@@ -133,7 +135,7 @@ void load_game()
 
 /**
  * Function to delete files by name from player_saves directory
- * @param filename
+ * @param filename To be deleted
  */
 void delete_saves(const char *filename)
 {
@@ -147,6 +149,7 @@ void delete_saves(const char *filename)
     printf("\nGame '%s' deleted successfully!\n\n\n", filename);
     home();
 }
+
 
 /**
  * Helper function to load the contents of a 3D array for replay
@@ -182,6 +185,7 @@ void read_stack(Move stack[MAX_SIZE], int *top, FILE *file)
     }
 }
 
+
 /**
  * Load filepath into global variable based on filename; fixed bug of not finding filepath when restarting a game on run
  * without playing a new one first.
@@ -207,6 +211,7 @@ void load_filepath(const char *filename)
         return;
     }
 }
+
 
 /**
  * Load data from the specified file back into global variables in output_grid for replay
@@ -252,6 +257,7 @@ void load_data(const char *filepath) {
     fclose(file);
 }
 
+
 /**
  * Add all of the moves from gameplay to the redo stack for looking through move history
  */
@@ -267,13 +273,15 @@ void reverse_stack()
 }
 
 
-
+/**
+ * Bring game back into view for the player to see moves of a game; non-playable
+ */
 void cycle_through_moves()
 {
     printf("Game loaded successfully!\n");
     snprintf(file_path, sizeof(file_path), "%s/%s", files_dir, file_name); // Construct file path
     load_data(file_path); // Pass file path to load_data
-    reverse_stack(move_history, &move_history_top, redo_stack, &redo_top);
+    reverse_stack(); // Reverse the order of move_history by adding to redo stack
     display_game_replay(solution_numbers_removed);
     //handle_input_replay(solution_playable);
     while(replay_flag)

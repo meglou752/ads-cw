@@ -1,3 +1,4 @@
+#ifndef ADS_FILE_HANDLING_H
 #include "sudoku.h"
 void save_game();
 void load_game();
@@ -13,3 +14,4 @@ void load_filepath(const char *filename);
 void cycle_through_moves();
 void reverse_stack();
 
+#endif //ADS_FILE_HANDLING_H
